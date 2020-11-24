@@ -15,22 +15,19 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
+import zeek1910.com.myapplication.models.TableItem;
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
-    private TextView text;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        text = findViewById(R.id.tv);
-
-        SheduleParcer sheduleParcer = new SheduleParcer(text);
+        SheduleParcer sheduleParcer = new SheduleParcer(this);
         sheduleParcer.execute("barsov-valerij-igorovich");
 
         Retrofit retrofit = new Retrofit.Builder()

@@ -2,6 +2,7 @@ package zeek1910.com.myapplication.models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -29,6 +30,19 @@ public class TableItem implements Serializable {
 
     @ColumnInfo(name = "lesson_group")
     private String lessonGroup;
+
+    public TableItem() {
+    }
+    @Ignore
+    public TableItem(int id, String dayName, String owner, int lessonNumber, String lessonName, String lessonRoom, String lessonGroup) {
+        this.id = id;
+        this.dayName = dayName;
+        this.owner = owner;
+        this.lessonNumber = lessonNumber;
+        this.lessonName = lessonName;
+        this.lessonRoom = lessonRoom;
+        this.lessonGroup = lessonGroup;
+    }
 
     public int getId() {
         return id;

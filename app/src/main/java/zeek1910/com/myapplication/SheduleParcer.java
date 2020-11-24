@@ -1,5 +1,6 @@
 package zeek1910.com.myapplication;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import zeek1910.com.myapplication.models.Day;
 import zeek1910.com.myapplication.models.Lesson;
+import zeek1910.com.myapplication.models.TableItem;
 
 public class SheduleParcer extends AsyncTask<String,Void,Void> {
 
@@ -19,10 +21,12 @@ public class SheduleParcer extends AsyncTask<String,Void,Void> {
 
     OkHttpClient client;
     List<Day> days;
+    Context context;
 
-    public SheduleParcer(TextView tv){
+    public SheduleParcer(Context cntx){
         client = new OkHttpClient();
         days = new ArrayList<>();
+        context = cntx;
     }
 
     @Override
@@ -41,9 +45,14 @@ public class SheduleParcer extends AsyncTask<String,Void,Void> {
             days.add(parce(list_days[3]));
             days.add(parce(list_days[4]));
             days.add(parce(list_days[5]));
+            days.get(0).setName("Понеділок");
+            days.get(1).setName("Вівторок");
+            days.get(2).setName("Середа");
+            days.get(3).setName("Четверг");
+            days.get(4).setName("П'ятниця");
 
+            insertDayDataToDatabase(days.get(0),strings[0]);
 
-            printDay(days.get(1));
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -172,7 +181,7 @@ public class SheduleParcer extends AsyncTask<String,Void,Void> {
         String temp = data.substring(index);
         index = temp.indexOf("<br>'");
         String groups = temp.substring(14,index);
-        String[] groupsList = groups.split("<br>");
+        groups = groups.replace("<br>",",");
 
         index = data.indexOf("a>,");
         temp = data.substring(index);
@@ -180,37 +189,111 @@ public class SheduleParcer extends AsyncTask<String,Void,Void> {
         temp = temp.substring(4,index);
         String[] list = temp.split(",");
 
-        return new Lesson(list[0],groupsList,list[1]);
+        return new Lesson(list[0],groups,list[1]);
     }
 
 
-    void printDay(Day day){
-        String res = "";
-        if (day.getLesson1() != null){
-            res+="1 - "+day.getLesson1().getName()+";";
-        }
-        if (day.getLesson2() != null){
-            res+="2 - "+day.getLesson2().getName()+";";
-        }
-        if (day.getLesson3() != null){
-            res+="3 - "+day.getLesson3().getName()+";";
-        }
-        if (day.getLesson4() != null){
-            res+="4 - "+day.getLesson4().getName()+";";
-        }
-        if (day.getLesson5() != null){
-            res+="5 - "+day.getLesson5().getName()+";";
-        }
-        if (day.getLesson6() != null){
-            res+="6 - "+day.getLesson6().getName()+";";
-        }
-        if (day.getLesson7() != null){
-            res+="7 - "+day.getLesson7().getName()+";";
-        }
-        if (day.getLesson8() != null){
-            res+="8 - "+day.getLesson8().getName()+";";
-        }
+    void insertDayDataToDatabase(Day day, String owner){
+        RoomDB database = RoomDB.getInstance(context);
+        TableItem tableItem = new TableItem();
+        tableItem.setDayName(day.getName());
+        tableItem.setOwner(owner);
 
-        Log.d("parce", res);
+
+        tableItem.setLessonNumber(1);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson1().getName());
+            tableItem.setLessonGroup(day.getLesson1().getGroups());
+            tableItem.setLessonRoom(day.getLesson1().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(2);
+        if(day.getLesson2() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson2().getName());
+            tableItem.setLessonGroup(day.getLesson2().getGroups());
+            tableItem.setLessonRoom(day.getLesson2().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(3);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson3().getName());
+            tableItem.setLessonGroup(day.getLesson3().getGroups());
+            tableItem.setLessonRoom(day.getLesson3().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(4);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson4().getName());
+            tableItem.setLessonGroup(day.getLesson4().getGroups());
+            tableItem.setLessonRoom(day.getLesson4().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(5);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson5().getName());
+            tableItem.setLessonGroup(day.getLesson5().getGroups());
+            tableItem.setLessonRoom(day.getLesson5().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(6);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson6().getName());
+            tableItem.setLessonGroup(day.getLesson6().getGroups());
+            tableItem.setLessonRoom(day.getLesson6().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(7);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson7().getName());
+            tableItem.setLessonGroup(day.getLesson7().getGroups());
+            tableItem.setLessonRoom(day.getLesson7().getRoom());
+        }
+        database.tableDao().insert(tableItem);
+
+        tableItem.setLessonNumber(8);
+        if(day.getLesson1() == null){
+            tableItem.setLessonName("");
+            tableItem.setLessonGroup("");
+            tableItem.setLessonRoom("");
+        }else{
+            tableItem.setLessonName(day.getLesson8().getName());
+            tableItem.setLessonGroup(day.getLesson8().getGroups());
+            tableItem.setLessonRoom(day.getLesson8().getRoom());
+        }
+        database.tableDao().insert(tableItem);
     }
 }

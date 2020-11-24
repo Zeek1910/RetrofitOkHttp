@@ -6,10 +6,10 @@ import java.util.Objects;
 public class Lesson {
 
     private String name;
-    private String[] groups;
+    private String groups;
     private String room;
 
-    public Lesson(String name, String[] groups, String room) {
+    public Lesson(String name, String groups, String room) {
         this.name = name;
         this.groups = groups;
         this.room = room;
@@ -23,11 +23,11 @@ public class Lesson {
         this.name = name;
     }
 
-    public String[] getGroups() {
+    public String getGroups() {
         return groups;
     }
 
-    public void setGroups(String[] groups) {
+    public void setGroups(String groups) {
         this.groups = groups;
     }
 
@@ -43,7 +43,7 @@ public class Lesson {
     public String toString() {
         return "Lesson{" +
                 "name='" + name + '\'' +
-                ", groups=" + Arrays.toString(groups) +
+                ", groups=" + groups + '\'' +
                 ", room='" + room + '\'' +
                 '}';
     }
@@ -54,7 +54,7 @@ public class Lesson {
         if (o == null || getClass() != o.getClass()) return false;
         Lesson lesson = (Lesson) o;
         return Objects.equals(name, lesson.name) &&
-                Arrays.equals(groups, lesson.groups) &&
+                Objects.equals(groups, lesson.groups) &&
                 Objects.equals(room, lesson.room);
     }
 }

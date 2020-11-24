@@ -14,6 +14,7 @@ public class Day {
     private Lesson lesson8;
 
     public Day() {
+
     }
 
     public Day(String name, Lesson lesson1, Lesson lesson2,
