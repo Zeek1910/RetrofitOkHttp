@@ -21,6 +21,6 @@ public interface TableDao {
     @Query("SELECT * FROM teachers_shedule")
     List<TableItem> getAll();
 
-    @Delete
-    void reset(List<TableItem> tableItems);
+    @Query("DELETE FROM teachers_shedule")
+    void clearTable();
 }

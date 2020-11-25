@@ -1,4 +1,4 @@
-package zeek1910.com.myapplication;
+package zeek1910.com.myapplication.interfaces;
 
 import java.util.List;
 
