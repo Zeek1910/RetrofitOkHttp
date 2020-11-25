@@ -1,10 +1,15 @@
 package zeek1910.com.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
+
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 import java.util.List;
 
@@ -15,20 +20,28 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
-import zeek1910.com.myapplication.models.TableItem;
+
 
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
+    private BottomNavigationView bottomNavigationView;
+    private NavHostFragment navHostFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
+
         SheduleParcer sheduleParcer = new SheduleParcer(this);
-        sheduleParcer.execute("barsov-valerij-igorovich");
+        //sheduleParcer.execute("barsov-valerij-igorovich");
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -66,8 +79,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
         service.getLecturersByFaculty(1).enqueue(callback1);
-        service.getGroupsByFaculty("1|3").enqueue(callback2);
+        //service.getGroupsByFaculty("1|3").enqueue(callback2);
 
     }
 
