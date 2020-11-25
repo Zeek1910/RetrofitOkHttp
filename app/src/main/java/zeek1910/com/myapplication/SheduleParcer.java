@@ -3,7 +3,6 @@ package zeek1910.com.myapplication;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +10,7 @@ import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import zeek1910.com.myapplication.db.RoomDB;
 import zeek1910.com.myapplication.models.Day;
 import zeek1910.com.myapplication.models.Lesson;
 import zeek1910.com.myapplication.models.TableItem;
@@ -51,7 +51,7 @@ public class SheduleParcer extends AsyncTask<String,Void,Void> {
             days.get(3).setName("Четверг");
             days.get(4).setName("П'ятниця");
 
-            insertDayDataToDatabase(days.get(0),strings[0]);
+            //insertDayDataToDatabase(days.get(0),strings[0]);
 
 
         } catch (IOException e) {

@@ -29,16 +29,28 @@ android {
 
 dependencies {
 
-    //room
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    def navigation_version = "2.3.0"
+    def room_version = "2.2.5"
+    def retrofit_version = "2.9.0"
+    def gson_version = "2.9.0"
 
-    //retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    // Room
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "android.arch.persistence.room:compiler:$room_version"
+
+    // retrofit and Gson
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$gson_version"
 
     //OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
+
+    // jetpack navigation component
+    implementation "androidx.navigation:navigation-fragment:$navigation_version"
+    implementation "androidx.navigation:navigation-ui:$navigation_version"
+    implementation "androidx.navigation:navigation-dynamic-features-fragment:$navigation_version"
+
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
