@@ -1,11 +1,13 @@
 package zeek1910.com.myapplication.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import zeek1910.com.myapplication.models.TableItem;
 public class FullTimeTableRecyclerViewAdapter extends RecyclerView.Adapter<FullTimeTableRecyclerViewAdapter.FullTimeTableViewHolder>{
 
     private List<TableItem> data;
+
+    private String currentDay;
 
     public FullTimeTableRecyclerViewAdapter(List<TableItem> data){
         this.data = data;
@@ -33,10 +37,28 @@ public class FullTimeTableRecyclerViewAdapter extends RecyclerView.Adapter<FullT
 
     @Override
     public void onBindViewHolder(@NonNull FullTimeTableViewHolder holder, int position) {
+        holder.tvDay.setVisibility(View.GONE);
         holder.tvDay.setText(data.get(position).getDayName());
-        holder.tvLessonName.setText(data.get(position).getLessonName());
-        holder.tvLessonRoom.setText(data.get(position).getLessonRoom());
-        holder.tvLessonGroups.setText(data.get(position).getLessonGroup());
+        int lessonNumber = data.get(position).getLessonNumber();
+        String lessonName = data.get(position).getLessonName();
+        String lessonGroups = data.get(position).getLessonGroup();
+        String lessonRoom = data.get(position).getLessonRoom();
+        holder.tvLessonName.setText(lessonName);
+        holder.tvLessonGroups.setText(lessonGroups);
+        holder.tvLessonRoom.setText(lessonRoom);
+        if(lessonName.equals("")) {
+            holder.tvLessonName.setText("нету");
+        }
+        if(position == 0 || position == 8 || position == 16 || position == 24 || position == 32){
+            holder.tvDay.setVisibility(View.VISIBLE);
+        }
+
+        if (position % 2 != 0){
+            holder.layout.setBackgroundResource(R.drawable.item_bg_second_week);
+        }else{
+            holder.layout.setBackgroundResource(R.drawable.item_bg_first_week);
+        }
+
     }
 
     @Override
@@ -46,10 +68,14 @@ public class FullTimeTableRecyclerViewAdapter extends RecyclerView.Adapter<FullT
 
     public class FullTimeTableViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvDay, tvLessonName, tvLessonRoom, tvLessonGroups;
+        ConstraintLayout layout;
+
+        TextView tvDay, tvLessonName, tvLessonRoom, tvLessonGroups;
 
         public FullTimeTableViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            layout = itemView.findViewById(R.id.rootItemLayout);
 
             tvDay = itemView.findViewById(R.id.textViewDay);
             tvLessonName = itemView.findViewById(R.id.textViewLessonName);

@@ -5,8 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +27,10 @@ public class FullTimeTableActivity extends AppCompatActivity {
 
     private List<TableItem> data;
 
+    private TextView textView;
+
     private String own = "";
+    private String fullName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,27 +40,33 @@ public class FullTimeTableActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(intent != null){
             own = intent.getStringExtra(SearchFragment.KEY_OWNER);
+            fullName = intent.getStringExtra(SearchFragment.KEY_FULLNAME);
         }
 
+        textView = findViewById(R.id.textViewLecturerName);
+        textView.setText(fullName);
+
         data = new ArrayList<>();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("devcpp", ""+own);
-                RoomDB database = RoomDB.getInstance(getBaseContext());
-                data = database.tableDao().getAll();
-                Log.d("devcpp", ""+data.size());
-                recyclerView.setAdapter(adapter);
-            }
-        });
-        thread.start();
 
         recyclerView = findViewById(R.id.recyclerViewFullTimeTable);
         recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new FullTimeTableRecyclerViewAdapter(data);
-
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RoomDB database = RoomDB.getInstance(getBaseContext());
+                data = database.tableDao().getSheduleByLecturer(own);
+                adapter = new FullTimeTableRecyclerViewAdapter(data);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        });
+        thread.start();
 
     }
 }

@@ -43,6 +43,7 @@ import zeek1910.com.myapplication.models.TableItem;
 public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener {
 
     public static final String KEY_OWNER = "KEY_OWNER";
+    public static final String KEY_FULLNAME = "KEY_FULLNAME";
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
     private RecyclerView recyclerView;
@@ -65,6 +66,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     Callback<List<Group>> callback2;
 
     private int currentTypeAdapter = -1;
+
+    String own, fullName;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -167,16 +170,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onItemClick(int position) {
         if (currentTypeAdapter == SearchRecyclerViewAdapter.TYPE_LECTURERS){
-            Log.d("devcpp",lecturers.get(position).toString());
+            //Log.d("devcpp",lecturers.get(position).toString());
+            fullName = lecturers.get(position).getActName();
+            own = lecturers.get(position).getSlug();
             new ParceShedule().execute(lecturers.get(position).getSlug());
         }
 
         if (currentTypeAdapter == SearchRecyclerViewAdapter.TYPE_GROUPS){
-            Log.d("devcpp",groups.get(position).toString());
+            //Log.d("devcpp",groups.get(position).toString());
         }
     }
 
-    class ParceShedule extends AsyncTask<String,Void,String>{
+    class ParceShedule extends AsyncTask<String, Void, Void> {
 
         RoomDB database;
 
@@ -187,21 +192,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected Void doInBackground(String... strings) {
             data.clear();
             database = RoomDB.getInstance(getContext());
             String url = BASE_URL + "schedule/lecturer/" +strings[0];
             parce(url);
 
-            return strings[0];
+            return null;
         }
 
 
         @Override
-        protected void onPostExecute(String str) {
-            super.onPostExecute(str);
+        protected void onPostExecute(Void avoid) {
+            super.onPostExecute(avoid);
             Intent intent = new Intent(getContext(), FullTimeTableActivity.class);
-            intent.putExtra(KEY_OWNER,str);
+            intent.putExtra(KEY_OWNER, own);
+            intent.putExtra(KEY_FULLNAME, fullName);
             startActivity(intent);
         }
 
@@ -274,7 +280,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
                     String[] lessonInfo = getLessonInfo(table_data.get(i).html());
 
-                    data.add(new TableItem(-1,currentDay,"",currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
+                    data.add(new TableItem(currentDay,own,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
                     currentLesson++;
                 }
 

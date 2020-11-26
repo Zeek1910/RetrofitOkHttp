@@ -33,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
         navHostFragment.getNavController().navigate(R.id.searchFragment);
 
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                RoomDB database = RoomDB.getInstance(getBaseContext());
+                database.tableDao().clearTable();
+            }
+        });
+        thread.start();
     }
 
 }

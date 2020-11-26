@@ -21,6 +21,9 @@ public interface TableDao {
     @Query("SELECT * FROM lecturer_shedule")
     List<TableItem> getAll();
 
+    @Query("SELECT * FROM lecturer_shedule WHERE owner =:own")
+    List<TableItem> getSheduleByLecturer(String own);
+
     @Query("DELETE FROM lecturer_shedule WHERE owner = :own")
     void delete(String own);
 

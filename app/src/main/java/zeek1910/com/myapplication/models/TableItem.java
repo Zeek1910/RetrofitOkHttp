@@ -34,8 +34,7 @@ public class TableItem implements Serializable {
     public TableItem() {
     }
     @Ignore
-    public TableItem(int id, String dayName, String owner, int lessonNumber, String lessonName, String lessonRoom, String lessonGroup) {
-        this.id = id;
+    public TableItem(String dayName, String owner, int lessonNumber, String lessonName, String lessonRoom, String lessonGroup) {
         this.dayName = dayName;
         this.owner = owner;
         this.lessonNumber = lessonNumber;
@@ -45,7 +44,6 @@ public class TableItem implements Serializable {
     }
     @Ignore
     public TableItem(TableItem item){
-        this.id = item.getId();
         this.dayName = item.getDayName();
         this.owner = item.getOwner();
         this.lessonNumber = item.getLessonNumber();
