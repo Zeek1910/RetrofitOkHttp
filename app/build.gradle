@@ -35,6 +35,9 @@ dependencies {
     def retrofit_version = "2.9.0"
     def gson_version = "2.9.0"
 
+    //JSoup
+    implementation 'org.jsoup:jsoup:1.13.1'
+
     // Room
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
@@ -42,9 +45,6 @@ dependencies {
     // retrofit and Gson
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$gson_version"
-
-    //OkHttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
     // jetpack navigation component
     implementation "androidx.navigation:navigation-fragment:$navigation_version"

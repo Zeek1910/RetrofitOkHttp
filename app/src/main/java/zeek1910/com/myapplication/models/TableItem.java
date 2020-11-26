@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "teachers_shedule")
+@Entity(tableName = "lecturer_shedule")
 public class TableItem implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -42,6 +42,16 @@ public class TableItem implements Serializable {
         this.lessonName = lessonName;
         this.lessonRoom = lessonRoom;
         this.lessonGroup = lessonGroup;
+    }
+    @Ignore
+    public TableItem(TableItem item){
+        this.id = item.getId();
+        this.dayName = item.getDayName();
+        this.owner = item.getOwner();
+        this.lessonNumber = item.getLessonNumber();
+        this.lessonName = item.getLessonName();
+        this.lessonRoom = item.getLessonRoom();
+        this.lessonGroup = item.getLessonGroup();
     }
 
     public int getId() {
@@ -98,5 +108,16 @@ public class TableItem implements Serializable {
 
     public void setLessonGroup(String lessonGroup) {
         this.lessonGroup = lessonGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "TableItem{" +
+                "dayName='" + dayName + '\'' +
+                ", lessonNumber=" + lessonNumber +
+                ", lessonName='" + lessonName + '\'' +
+                ", lessonRoom='" + lessonRoom + '\'' +
+                ", lessonGroup='" + lessonGroup + '\'' +
+                '}';
     }
 }

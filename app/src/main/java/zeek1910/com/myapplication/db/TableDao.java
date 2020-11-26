@@ -18,9 +18,12 @@ public interface TableDao {
     @Insert(onConflict = REPLACE)
     void insert(TableItem tableItem);
 
-    @Query("SELECT * FROM teachers_shedule")
+    @Query("SELECT * FROM lecturer_shedule")
     List<TableItem> getAll();
 
-    @Query("DELETE FROM teachers_shedule")
+    @Query("DELETE FROM lecturer_shedule WHERE owner = :own")
+    void delete(String own);
+
+    @Query("DELETE FROM lecturer_shedule")
     void clearTable();
 }
