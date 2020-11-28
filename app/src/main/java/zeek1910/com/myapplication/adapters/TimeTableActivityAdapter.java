@@ -1,6 +1,5 @@
 package zeek1910.com.myapplication.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +14,13 @@ import java.util.List;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.models.TableItem;
 
-public class FullTimeTableRecyclerViewAdapter extends RecyclerView.Adapter<FullTimeTableRecyclerViewAdapter.FullTimeTableViewHolder>{
+public class TimeTableActivityAdapter extends RecyclerView.Adapter<TimeTableActivityAdapter.FullTimeTableViewHolder>{
 
     private List<TableItem> data;
 
     private String currentDay;
 
-    public FullTimeTableRecyclerViewAdapter(List<TableItem> data){
+    public TimeTableActivityAdapter(List<TableItem> data){
         this.data = data;
     }
 
@@ -30,7 +29,7 @@ public class FullTimeTableRecyclerViewAdapter extends RecyclerView.Adapter<FullT
     @Override
     public FullTimeTableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.full_time_table_recycler_view_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_table_list_item,parent,false);
         FullTimeTableViewHolder viewHolder = new FullTimeTableViewHolder(view);
         return viewHolder;
     }

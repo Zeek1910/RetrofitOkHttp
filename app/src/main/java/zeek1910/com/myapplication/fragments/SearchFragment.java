@@ -30,12 +30,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import zeek1910.com.myapplication.activities.FullTimeTableActivity;
+import zeek1910.com.myapplication.activities.TimeTableActivity;
 import zeek1910.com.myapplication.db.RoomDB;
 import zeek1910.com.myapplication.interfaces.APIInterface;
 import zeek1910.com.myapplication.interfaces.OnRecyclerViewItemClickListener;
 import zeek1910.com.myapplication.R;
-import zeek1910.com.myapplication.adapters.SearchRecyclerViewAdapter;
+import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 import zeek1910.com.myapplication.models.TableItem;
@@ -89,8 +89,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
         data = new ArrayList<>();
 
-        adapterLecturers = new SearchRecyclerViewAdapter(lecturers, groups, SearchRecyclerViewAdapter.TYPE_LECTURERS,this::onItemClick);
-        adapterGroups = new SearchRecyclerViewAdapter(lecturers, groups, SearchRecyclerViewAdapter.TYPE_GROUPS,this::onItemClick);
+        adapterLecturers = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_LECTURERS,this::onItemClick);
+        adapterGroups = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_GROUPS,this::onItemClick);
 
         callback1 = new Callback<List<Lecturer>>() {
             @Override
@@ -98,7 +98,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                 progressBar.setVisibility(View.INVISIBLE);
                 lecturers.addAll(response.body());
                 recyclerView.setAdapter(adapterLecturers);
-                currentTypeAdapter = SearchRecyclerViewAdapter.TYPE_LECTURERS;
+                currentTypeAdapter = SearchFragmentAdapter.TYPE_LECTURERS;
             }
 
             @Override
@@ -114,7 +114,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                 progressBar.setVisibility(View.INVISIBLE);
                 groups.addAll(response.body());
                 recyclerView.setAdapter(adapterGroups);
-                currentTypeAdapter = SearchRecyclerViewAdapter.TYPE_GROUPS;
+                currentTypeAdapter = SearchFragmentAdapter.TYPE_GROUPS;
             }
 
             @Override
@@ -169,14 +169,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
     @Override
     public void onItemClick(int position) {
-        if (currentTypeAdapter == SearchRecyclerViewAdapter.TYPE_LECTURERS){
+        if (currentTypeAdapter == SearchFragmentAdapter.TYPE_LECTURERS){
             //Log.d("devcpp",lecturers.get(position).toString());
             fullName = lecturers.get(position).getActName();
             own = lecturers.get(position).getSlug();
             new ParceShedule().execute(lecturers.get(position).getSlug());
         }
 
-        if (currentTypeAdapter == SearchRecyclerViewAdapter.TYPE_GROUPS){
+        if (currentTypeAdapter == SearchFragmentAdapter.TYPE_GROUPS){
             //Log.d("devcpp",groups.get(position).toString());
         }
     }
@@ -205,7 +205,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         @Override
         protected void onPostExecute(Void avoid) {
             super.onPostExecute(avoid);
-            Intent intent = new Intent(getContext(), FullTimeTableActivity.class);
+            Intent intent = new Intent(getContext(), TimeTableActivity.class);
             intent.putExtra(KEY_OWNER, own);
             intent.putExtra(KEY_FULLNAME, fullName);
             startActivity(intent);
@@ -326,8 +326,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                     }
                 }else{
                     result[0] = list[0];
-                    result[1] = list[1];
-                    result[2] = list[2];
+                    if(list.length > 3){
+                        result[2] = list[list.length-1];
+                        for(int i = 1; i<list.length-1;i++){
+                            result[1] = result[1] + "," +list[i];
+                        }
+                        result[1] = result[1].substring(2);
+                    }else{
+                        result[1] = list[1];
+                        result[2] = list[2];
+                    }
                 }
             }
             return result;

@@ -15,7 +15,7 @@ import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 
-public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecyclerViewAdapter.SearchViewHolder> {
+public class SearchFragmentAdapter extends RecyclerView.Adapter<SearchFragmentAdapter.SearchViewHolder> {
 
     private final OnRecyclerViewItemClickListener itemClick;
 
@@ -26,7 +26,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     List<Group> groups;
     int type;
 
-    public SearchRecyclerViewAdapter(List<Lecturer> lecturers, List<Group> groups, int type, OnRecyclerViewItemClickListener itemClick){
+    public SearchFragmentAdapter(List<Lecturer> lecturers, List<Group> groups, int type, OnRecyclerViewItemClickListener itemClick){
         this.lecturers = lecturers;
         this.groups = groups;
         this.type = type;
@@ -36,7 +36,7 @@ public class SearchRecyclerViewAdapter extends RecyclerView.Adapter<SearchRecycl
     @NonNull
     @Override
     public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_recycler_view_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_fragment_list_item,parent,false);
         SearchViewHolder viewHolder = new SearchViewHolder(view);
         return viewHolder;
     }
