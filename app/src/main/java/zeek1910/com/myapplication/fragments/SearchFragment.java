@@ -32,18 +32,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import zeek1910.com.myapplication.activities.TimeTableActivity;
 import zeek1910.com.myapplication.db.RoomDB;
+import zeek1910.com.myapplication.db.TempTableItem;
 import zeek1910.com.myapplication.interfaces.APIInterface;
 import zeek1910.com.myapplication.interfaces.OnRecyclerViewItemClickListener;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
-import zeek1910.com.myapplication.models.TableItem;
 
 public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener {
 
-    public static final String KEY_OWNER = "KEY_OWNER";
-    public static final String KEY_FULLNAME = "KEY_FULLNAME";
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
     private RecyclerView recyclerView;
@@ -58,7 +56,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     private List<Lecturer> lecturers;
     private List<Group> groups;
 
-    private List<TableItem> data;
+    private List<TempTableItem> data;
 
     private Retrofit retrofit;
     private APIInterface service;
@@ -193,8 +191,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
         @Override
         protected Void doInBackground(String... strings) {
-            data.clear();
             database = RoomDB.getInstance(getContext());
+            database.tableDao().clearTable();
+            data.clear();
             String url = BASE_URL + "schedule/lecturer/" +strings[0];
             parce(url);
 
@@ -206,8 +205,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         protected void onPostExecute(Void avoid) {
             super.onPostExecute(avoid);
             Intent intent = new Intent(getContext(), TimeTableActivity.class);
-            intent.putExtra(KEY_OWNER, own);
-            intent.putExtra(KEY_FULLNAME, fullName);
+            intent.putExtra(TimeTableActivity.KEY_FULLNAME, fullName);
             startActivity(intent);
         }
 
@@ -280,7 +278,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
                     String[] lessonInfo = getLessonInfo(table_data.get(i).html());
 
-                    data.add(new TableItem(currentDay,own,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
+                    data.add(new TempTableItem(currentDay,fullName,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
                     currentLesson++;
                 }
 
@@ -296,7 +294,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
         private void sortData() {
             if (data.size() % 2 != 0) {
-                TableItem item = new TableItem(data.get(data.size() - 1));
+                TempTableItem item = new TempTableItem(data.get(data.size() - 1));
                 item.setLessonNumber(item.getLessonNumber() + 1);
                 data.add(item);
             }

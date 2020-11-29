@@ -18,7 +18,16 @@ public class AppSettings {
     private SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
 
-    public AppSettings(Context cntx){
+    private static AppSettings instance;
+
+    public static AppSettings getInstance(Context cntx){
+        if (instance == null){
+            instance = new AppSettings(cntx);
+        }
+        return instance;
+    }
+
+    private AppSettings(Context cntx){
         context = cntx;
         sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();

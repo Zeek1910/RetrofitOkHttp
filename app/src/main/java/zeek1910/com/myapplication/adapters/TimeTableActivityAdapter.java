@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import zeek1910.com.myapplication.R;
-import zeek1910.com.myapplication.models.TableItem;
+import zeek1910.com.myapplication.db.TableItem;
+import zeek1910.com.myapplication.db.TempTableItem;
 
 public class TimeTableActivityAdapter extends RecyclerView.Adapter<TimeTableActivityAdapter.FullTimeTableViewHolder>{
 

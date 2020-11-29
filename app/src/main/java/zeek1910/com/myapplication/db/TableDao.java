@@ -1,13 +1,10 @@
 package zeek1910.com.myapplication.db;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
-
-import zeek1910.com.myapplication.models.TableItem;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
 
@@ -16,17 +13,29 @@ public interface TableDao {
 
 
     @Insert(onConflict = REPLACE)
-    void insert(TableItem tableItem);
+    void insert(TempTableItem tempTableItem);
 
-    @Query("SELECT * FROM lecturer_shedule")
-    List<TableItem> getAll();
+    @Insert(onConflict = REPLACE)
+    void insertToMainTable(TableItem tableItem);
 
-    @Query("SELECT * FROM lecturer_shedule WHERE owner =:own")
-    List<TableItem> getSheduleByLecturer(String own);
+    @Query("SELECT * FROM temp_table")
+    List<TempTableItem> getAll();
 
-    @Query("DELETE FROM lecturer_shedule WHERE owner = :own")
+    @Query("SELECT * FROM temp_table WHERE owner =:own")
+    List<TempTableItem> getSheduleByLecturer(String own);
+
+    @Query("DELETE FROM temp_table WHERE owner = :own")
     void delete(String own);
 
-    @Query("DELETE FROM lecturer_shedule")
+    @Query("DELETE FROM temp_table")
     void clearTable();
+
+
+    @Query("SELECT * FROM shedule_table WHERE owner =:own")
+    List<TableItem> getSheduleByLecturerFromSheduleTable(String own);
+
+    @Query("DELETE FROM shedule_table WHERE owner = :own")
+    void deleteFromSheduleTable(String own);
+
+
 }

@@ -6,21 +6,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
-import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.adapters.FavoritesFragmentAdapter;
 
 
-public class FavoritesFragment extends Fragment {
 
-    private List<String> data;
+public class FavoritesFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
@@ -37,10 +32,6 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        AppSettings appSettings = new AppSettings(getContext());
-        data = appSettings.getFavoritesTimeTables();
-        Log.d("devcpp", "data.size() = "+data.size());
     }
 
     @Override
@@ -53,9 +44,10 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new FavoritesFragmentAdapter(data);
+        adapter = new FavoritesFragmentAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         return view;
     }
+
 }

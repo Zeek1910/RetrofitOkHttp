@@ -1,4 +1,4 @@
-package zeek1910.com.myapplication.models;
+package zeek1910.com.myapplication.db;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "lecturer_shedule")
+@Entity(tableName = "shedule_table")
 public class TableItem implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
@@ -43,7 +43,7 @@ public class TableItem implements Serializable {
         this.lessonGroup = lessonGroup;
     }
     @Ignore
-    public TableItem(TableItem item){
+    public TableItem(TempTableItem item){
         this.dayName = item.getDayName();
         this.owner = item.getOwner();
         this.lessonNumber = item.getLessonNumber();

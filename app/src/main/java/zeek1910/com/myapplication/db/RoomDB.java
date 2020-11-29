@@ -6,10 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-
-import zeek1910.com.myapplication.models.TableItem;
-
-@Database(entities = {TableItem.class}, version = 2, exportSchema = false)
+@Database(entities = {TempTableItem.class, TableItem.class}, version = 1, exportSchema = false)
 public abstract class RoomDB extends RoomDatabase {
     private static RoomDB database;
 
