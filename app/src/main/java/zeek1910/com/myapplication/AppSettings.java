@@ -12,6 +12,8 @@ public class AppSettings {
 
     public static final String SHARED_PREFERENCES_NAME = "app_settings";
     public static final String KEY_FAVORITES = "KEY_FAVORITES";
+    public static final String KEY_LAST_OWNER = "KEY_LAST_OWNER";
+    public static final String KEY_DEFAULT_OWNER = "KEY_DEFAULT_OWNER";
 
     private Context context;
 
@@ -61,5 +63,23 @@ public class AppSettings {
             return true;
         }
         return false;
+    }
+
+    public void setLastOwner(String own){
+        editor.putString(KEY_LAST_OWNER, own);
+        editor.commit();
+    }
+
+    public String getLastOwner(){
+        return sharedPreferences.getString(KEY_LAST_OWNER,"");
+    }
+
+    public void setDefaultOwner(String own){
+        editor.putString(KEY_DEFAULT_OWNER, own);
+        editor.commit();
+    }
+
+    public String getDefaultOwner(){
+        return sharedPreferences.getString(KEY_DEFAULT_OWNER,"");
     }
 }

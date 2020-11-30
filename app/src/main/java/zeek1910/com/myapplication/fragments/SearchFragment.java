@@ -13,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +56,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     private Button btnLecturer, btnGroup;
     private EditText editTextFaculty;
     private ProgressBar progressBar;
+    private RadioGroup radioGroup;
 
     private List<Lecturer> lecturers;
     private List<Group> groups;
@@ -64,6 +69,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     Callback<List<Group>> callback2;
 
     private int currentTypeAdapter = -1;
+
+    private int faculty = -1;
 
     String own, fullName;
 
@@ -128,6 +135,41 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
+        radioGroup = view.findViewById(R.id.radioGroupFaculty);
+        radioGroup.clearCheck();
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                Log.d("devcpp", String.valueOf(i));
+                switch (i){
+                    case R.id.radio1:
+                        faculty = 1;
+                        break;
+                    case R.id.radio2:
+                        faculty = 2;
+                        break;
+                    case R.id.radio3:
+                        faculty = 3;
+                        break;
+                    case R.id.radio4:
+                        faculty = 4;
+                        break;
+                    case R.id.radio5:
+                        faculty = 5;
+                        break;
+                    case R.id.radio6:
+                        faculty = 6;
+                        break;
+                    case R.id.radio7:
+                        faculty = 7;
+                        break;
+                    case R.id.radio8:
+                        faculty = 8;
+                        break;
+                }
+            }
+        });
+
         btnLecturer = view.findViewById(R.id.button2);
         btnLecturer.setOnClickListener(this);
         btnGroup = view.findViewById(R.id.button);
@@ -150,15 +192,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onClick(View v) {
         progressBar.setVisibility(View.VISIBLE);
-        int faculty = Integer.parseInt(editTextFaculty.getText().toString());
+        //int faculty = Integer.parseInt(editTextFaculty.getText().toString());
         switch (v.getId()){
             case R.id.button2:
-                lecturers.clear();
-                service.getLecturersByFaculty(faculty).enqueue(callback1);
+                if (faculty != -1){
+                    lecturers.clear();
+                    service.getLecturersByFaculty(faculty).enqueue(callback1);
+                }
                 break;
             case R.id.button:
-                groups.clear();
-                service.getGroupsByFaculty("1|"+faculty).enqueue(callback2);
+                if (faculty != -1) {
+                    groups.clear();
+                    service.getGroupsByFaculty("1|" + faculty).enqueue(callback2);
+                }
                 break;
         }
 

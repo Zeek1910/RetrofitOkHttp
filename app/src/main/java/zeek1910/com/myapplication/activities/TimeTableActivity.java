@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -54,6 +53,7 @@ public class TimeTableActivity extends AppCompatActivity {
             boolean isShowButton = intent.getBooleanExtra(KEY_IS_SHOW_BUTTON,true);
             if(!isShowButton) buttonFav.setVisibility(View.GONE);
             isFav = appSettings.checkFavorites(fullName);
+            appSettings.setLastOwner(fullName);
         }
 
         if(isFav){
