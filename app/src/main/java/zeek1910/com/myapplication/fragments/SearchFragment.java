@@ -12,10 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -43,7 +44,7 @@ import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 
-public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener, MaterialButtonToggleGroup.OnButtonCheckedListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener {
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
@@ -54,12 +55,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
     private Button btnLecturer, btnGroup;
     private ProgressBar progressBar;
-    private MaterialButtonToggleGroup toggleGroup1;
-    private MaterialButtonToggleGroup toggleGroup2;
+    private AutoCompleteTextView autoCompleteTextViewFacultys;
+    private AutoCompleteTextView autoCompleteTextViewOwners;
+
+    ArrayAdapter<String> adapterOwnersList;
 
     private List<Lecturer> lecturers;
     private List<Group> groups;
-
     private List<TempTableItem> data;
 
     private Retrofit retrofit;
@@ -93,6 +95,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
 
         data = new ArrayList<>();
 
+        adapterOwnersList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
+
         adapterLecturers = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_LECTURERS,this::onItemClick);
         adapterGroups = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_GROUPS,this::onItemClick);
 
@@ -103,6 +107,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                 lecturers.addAll(response.body());
                 recyclerView.setAdapter(adapterLecturers);
                 currentTypeAdapter = SearchFragmentAdapter.TYPE_LECTURERS;
+
+                for (Lecturer lecturer:lecturers) {
+                    adapterOwnersList.add(lecturer.getActName());
+                }
+                adapterOwnersList.notifyDataSetChanged();
             }
 
             @Override
@@ -134,13 +143,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
-        toggleGroup1 = view.findViewById(R.id.ToggleGroupFaculty1);
-        toggleGroup1.clearChecked();
-        toggleGroup1.addOnButtonCheckedListener(this);
-        toggleGroup2 = view.findViewById(R.id.ToggleGroupFaculty2);
-        toggleGroup2.clearChecked();
-        toggleGroup2.addOnButtonCheckedListener(this);
+        autoCompleteTextViewFacultys = view.findViewById(R.id.facultySelect);
+        ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
 
+        for(int i = 1; i <= 8; i++){
+            adapterFacultysList.add("Факультет "+i);
+        }
+        autoCompleteTextViewFacultys.setAdapter(adapterFacultysList);
+        autoCompleteTextViewFacultys.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                faculty = i+1;
+            }
+        });
+
+        autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
+        autoCompleteTextViewOwners.setAdapter(adapterOwnersList);
 
         btnLecturer = view.findViewById(R.id.button2);
         btnLecturer.setOnClickListener(this);
@@ -194,46 +212,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         }
     }
 
-    @Override
-    public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-
-//        if (isChecked){
-//            if (group.getId() == R.id.ToggleGroupFaculty1){
-//                toggleGroup2.clearChecked();
-//            }else if (group.getId() == R.id.ToggleGroupFaculty2){
-//                toggleGroup1.clearChecked();
-//            }
-//
-//            switch (checkedId){
-//                case R.id.togle1:
-//                    faculty = 1;
-//                    break;
-//                case R.id.togle2:
-//                    faculty = 2;
-//                    break;
-//                case R.id.togle3:
-//                    faculty = 3;
-//                    break;
-//                case R.id.togle4:
-//                    faculty = 4;
-//                    break;
-//                case R.id.togle5:
-//                    faculty = 5;
-//                    break;
-//                case R.id.togle6:
-//                    faculty = 6;
-//                    break;
-//                case R.id.togle7:
-//                    faculty = 7;
-//                    break;
-//                case R.id.togle8:
-//                    faculty = 8;
-//                    break;
-//            }
-//        }
-
-        Log.d("devcpp", String.valueOf(isChecked));
-    }
 
     class ParceShedule extends AsyncTask<String, Void, Void> {
 
