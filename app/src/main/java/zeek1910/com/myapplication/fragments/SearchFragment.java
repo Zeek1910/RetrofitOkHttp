@@ -13,11 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,7 +43,7 @@ import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 
-public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener, MaterialButtonToggleGroup.OnButtonCheckedListener {
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
@@ -54,9 +53,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     private RecyclerView.LayoutManager layoutManager;
 
     private Button btnLecturer, btnGroup;
-    private EditText editTextFaculty;
     private ProgressBar progressBar;
-    private RadioGroup radioGroup;
+    private MaterialButtonToggleGroup toggleGroup1;
+    private MaterialButtonToggleGroup toggleGroup2;
 
     private List<Lecturer> lecturers;
     private List<Group> groups;
@@ -135,47 +134,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
-        radioGroup = view.findViewById(R.id.radioGroupFaculty);
-        radioGroup.clearCheck();
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                Log.d("devcpp", String.valueOf(i));
-                switch (i){
-                    case R.id.radio1:
-                        faculty = 1;
-                        break;
-                    case R.id.radio2:
-                        faculty = 2;
-                        break;
-                    case R.id.radio3:
-                        faculty = 3;
-                        break;
-                    case R.id.radio4:
-                        faculty = 4;
-                        break;
-                    case R.id.radio5:
-                        faculty = 5;
-                        break;
-                    case R.id.radio6:
-                        faculty = 6;
-                        break;
-                    case R.id.radio7:
-                        faculty = 7;
-                        break;
-                    case R.id.radio8:
-                        faculty = 8;
-                        break;
-                }
-            }
-        });
+        toggleGroup1 = view.findViewById(R.id.ToggleGroupFaculty1);
+        toggleGroup1.clearChecked();
+        toggleGroup1.addOnButtonCheckedListener(this);
+        toggleGroup2 = view.findViewById(R.id.ToggleGroupFaculty2);
+        toggleGroup2.clearChecked();
+        toggleGroup2.addOnButtonCheckedListener(this);
+
 
         btnLecturer = view.findViewById(R.id.button2);
         btnLecturer.setOnClickListener(this);
         btnGroup = view.findViewById(R.id.button);
         btnGroup.setOnClickListener(this);
-
-        editTextFaculty = view.findViewById(R.id.editTextFaculty);
 
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -192,7 +162,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onClick(View v) {
         progressBar.setVisibility(View.VISIBLE);
-        //int faculty = Integer.parseInt(editTextFaculty.getText().toString());
         switch (v.getId()){
             case R.id.button2:
                 if (faculty != -1){
@@ -223,6 +192,47 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         if (currentTypeAdapter == SearchFragmentAdapter.TYPE_GROUPS){
             //Log.d("devcpp",groups.get(position).toString());
         }
+    }
+
+    @Override
+    public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+
+//        if (isChecked){
+//            if (group.getId() == R.id.ToggleGroupFaculty1){
+//                toggleGroup2.clearChecked();
+//            }else if (group.getId() == R.id.ToggleGroupFaculty2){
+//                toggleGroup1.clearChecked();
+//            }
+//
+//            switch (checkedId){
+//                case R.id.togle1:
+//                    faculty = 1;
+//                    break;
+//                case R.id.togle2:
+//                    faculty = 2;
+//                    break;
+//                case R.id.togle3:
+//                    faculty = 3;
+//                    break;
+//                case R.id.togle4:
+//                    faculty = 4;
+//                    break;
+//                case R.id.togle5:
+//                    faculty = 5;
+//                    break;
+//                case R.id.togle6:
+//                    faculty = 6;
+//                    break;
+//                case R.id.togle7:
+//                    faculty = 7;
+//                    break;
+//                case R.id.togle8:
+//                    faculty = 8;
+//                    break;
+//            }
+//        }
+
+        Log.d("devcpp", String.valueOf(isChecked));
     }
 
     class ParceShedule extends AsyncTask<String, Void, Void> {

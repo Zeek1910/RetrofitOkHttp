@@ -10,147 +10,95 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RadioGroup
-            android:id="@+id/radioGroupFaculty"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
-            android:gravity="center|center_horizontal"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/ToggleGroupFaculty1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:gravity="center"
+                app:singleSelection="true">
 
-                <LinearLayout
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle1"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:text="1" />
 
-                    <RadioButton
-                        android:id="@+id/radio1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:checked="true"
-                        android:gravity="center"
-                        android:text="1"
-                        android:textColor="@drawable/radio_flat_text_selector" />
-
-                    <RadioButton
-                        android:id="@+id/radio2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="2"
-                        android:textColor="@drawable/radio_flat_text_selector" />
-
-                    <RadioButton
-                        android:id="@+id/radio3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="3"
-                        android:textColor="@drawable/radio_flat_text_selector" />
-
-                    <RadioButton
-                        android:id="@+id/radio4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="4"
-                        android:textColor="@drawable/radio_flat_text_selector" />
-                </LinearLayout>
-
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle2"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:text="2" />
 
-                    <RadioButton
-                        android:id="@+id/radio5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="5"
-                        android:textColor="@drawable/radio_flat_text_selector" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle3"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3" />
 
-                    <RadioButton
-                        android:id="@+id/radio6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="6"
-                        android:textColor="@drawable/radio_flat_text_selector" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle4"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4" />
 
-                    <RadioButton
-                        android:id="@+id/radio7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="7"
-                        android:textColor="@drawable/radio_flat_text_selector" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
 
-                    <RadioButton
-                        android:id="@+id/radio8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/radio_flat_selector"
-                        android:button="@android:color/transparent"
-                        android:gravity="center"
-                        android:text="8"
-                        android:textColor="@drawable/radio_flat_text_selector" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </RadioGroup>
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/ToggleGroupFaculty2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                app:singleSelection="true">
 
 
-        <EditText
-            android:id="@+id/editTextFaculty"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroupFaculty" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle5"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle6"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle7"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/togle8"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/SearchRecyclerView"
@@ -169,20 +117,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:text="Группы"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextFaculty" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:text="Преподы"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextFaculty" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <ProgressBar
             android:id="@+id/progressBar"
