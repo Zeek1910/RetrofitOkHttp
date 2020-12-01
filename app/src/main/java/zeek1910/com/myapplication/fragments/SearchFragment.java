@@ -1,5 +1,6 @@
 package zeek1910.com.myapplication.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,11 +13,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -44,7 +47,7 @@ import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 
-public class SearchFragment extends Fragment implements View.OnClickListener, OnRecyclerViewItemClickListener {
+public class SearchFragment extends Fragment implements MaterialButtonToggleGroup.OnButtonCheckedListener, OnRecyclerViewItemClickListener {
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
@@ -53,10 +56,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     private RecyclerView.Adapter adapterGroups;
     private RecyclerView.LayoutManager layoutManager;
 
-    private Button btnLecturer, btnGroup;
     private ProgressBar progressBar;
     private AutoCompleteTextView autoCompleteTextViewFacultys;
     private AutoCompleteTextView autoCompleteTextViewOwners;
+    private MaterialButtonToggleGroup toggleGroup;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -112,6 +115,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
                     adapterOwnersList.add(lecturer.getActName());
                 }
                 adapterOwnersList.notifyDataSetChanged();
+                autoCompleteTextViewOwners.setEnabled(true);
             }
 
             @Override
@@ -144,6 +148,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
         autoCompleteTextViewFacultys = view.findViewById(R.id.facultySelect);
+        autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
+
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
 
         for(int i = 1; i <= 8; i++){
@@ -154,16 +160,27 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 faculty = i+1;
+                if (faculty != -1){
+                    lecturers.clear();
+                    adapterOwnersList.clear();
+                    autoCompleteTextViewOwners.dismissDropDown();
+                    service.getLecturersByFaculty(faculty).enqueue(callback1);
+                }
             }
         });
 
-        autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
         autoCompleteTextViewOwners.setAdapter(adapterOwnersList);
+        autoCompleteTextViewOwners.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                InputMethodManager manager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.hideSoftInputFromWindow(autoCompleteTextViewOwners.getWindowToken(), 0);
+                autoCompleteTextViewOwners.clearFocus();
+            }
+        });
 
-        btnLecturer = view.findViewById(R.id.button2);
-        btnLecturer.setOnClickListener(this);
-        btnGroup = view.findViewById(R.id.button);
-        btnGroup.setOnClickListener(this);
+        toggleGroup = view.findViewById(R.id.materialButtonToggleGroup);
+        toggleGroup.addOnButtonCheckedListener(this);
 
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -178,27 +195,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
     }
 
     @Override
-    public void onClick(View v) {
-        progressBar.setVisibility(View.VISIBLE);
-        switch (v.getId()){
-            case R.id.button2:
-                if (faculty != -1){
-                    lecturers.clear();
-                    service.getLecturersByFaculty(faculty).enqueue(callback1);
-                }
-                break;
-            case R.id.button:
-                if (faculty != -1) {
-                    groups.clear();
-                    service.getGroupsByFaculty("1|" + faculty).enqueue(callback2);
-                }
-                break;
-        }
-
-
-    }
-
-    @Override
     public void onItemClick(int position) {
         if (currentTypeAdapter == SearchFragmentAdapter.TYPE_LECTURERS){
             //Log.d("devcpp",lecturers.get(position).toString());
@@ -210,6 +206,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener, On
         if (currentTypeAdapter == SearchFragmentAdapter.TYPE_GROUPS){
             //Log.d("devcpp",groups.get(position).toString());
         }
+    }
+
+    @Override
+    public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
+        if(isChecked){
+            switch (checkedId){
+                case R.id.materialBtn1:
+
+                    break;
+                case R.id.materialBtn2:
+
+                    break;
+            }
+        }
+
     }
 
 

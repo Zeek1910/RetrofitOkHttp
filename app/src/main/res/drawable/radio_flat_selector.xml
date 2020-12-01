@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/radio_flat_selected" android:state_checked="true" />
-    <item android:drawable="@drawable/radio_flat_regular" />
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:state_pressed="true" >
+        <shape android:shape="rectangle" >
+            <corners android:radius="1dp" />
+            <stroke android:width="2dip" android:color="@color/blue_600" />
+            <solid android:color="@color/blue_600" />
+        </shape>
+    </item>
+
+    <item android:state_checked="true">
+        <shape android:shape="rectangle" >
+            <corners android:radius="1dp" />
+            <stroke android:width="2dip" android:color="@color/blue_600" />
+            <solid android:color="@color/blue_600" />
+        </shape>
+    </item>
+
+    <item>
+        <shape android:shape="rectangle"  >
+            <corners android:radius="1dp" />
+            <stroke android:width="2dip" android:color="@color/blue_600" />
+            <solid android:color="#ffffff" />
+        </shape>
+    </item>
 </selector>
