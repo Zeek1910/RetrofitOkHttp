@@ -16,9 +16,8 @@ import java.util.List;
 import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.adapters.TimeTableActivityAdapter;
+import zeek1910.com.myapplication.models.LecturerTableItem;
 import zeek1910.com.myapplication.db.RoomDB;
-import zeek1910.com.myapplication.db.TableItem;
-import zeek1910.com.myapplication.db.TempTableItem;
 
 public class TimeTableActivity extends AppCompatActivity {
 
@@ -62,7 +61,7 @@ public class TimeTableActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     RoomDB database = RoomDB.getInstance(getBaseContext());
-                    List<TableItem> data = database.tableDao().getSheduleByLecturerFromSheduleTable(fullName);
+                    List<LecturerTableItem> data = database.tableDao().getSheduleByLecturer(fullName);
                     adapter = new TimeTableActivityAdapter(data);
                     runOnUiThread(new Runnable() {
                         @Override
@@ -79,12 +78,12 @@ public class TimeTableActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     RoomDB database = RoomDB.getInstance(getBaseContext());
-                    List<TableItem> tableItems = new ArrayList<>();
-                    List<TempTableItem> data = database.tableDao().getSheduleByLecturer(fullName);
-                    for (TempTableItem item:data) {
-                        tableItems.add(new TableItem(item));
+                    List<LecturerTableItem> lecturerTableItems = new ArrayList<>();
+                    List<LecturerTableItem> data = database.tableDao().getSheduleByLecturer(fullName);
+                    for (LecturerTableItem item:data) {
+                        //lecturerTableItems.add(new LecturerTableItem(item));
                     }
-                    adapter = new TimeTableActivityAdapter(tableItems);
+                    adapter = new TimeTableActivityAdapter(lecturerTableItems);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -107,7 +106,7 @@ public class TimeTableActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             RoomDB database = RoomDB.getInstance(getBaseContext());
-                            database.tableDao().deleteFromSheduleTable(fullName);
+                            //database.tableDao().deleteFromSheduleTable(fullName);
                         }
                     });
                     thread.start();
@@ -118,9 +117,9 @@ public class TimeTableActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             RoomDB database = RoomDB.getInstance(getBaseContext());
-                            List<TempTableItem> tempTableItems = database.tableDao().getSheduleByLecturer(fullName);
-                            for (TempTableItem item:tempTableItems) {
-                                database.tableDao().insertToMainTable(new TableItem(item));
+                            List<LecturerTableItem> tempTableItems = database.tableDao().getSheduleByLecturer(fullName);
+                            for (LecturerTableItem item:tempTableItems) {
+                                //database.tableDao().insertToMainTable(new LecturerTableItem(item));
                             }
 
                         }

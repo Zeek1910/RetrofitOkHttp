@@ -14,28 +14,25 @@ import java.util.List;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.models.LecturerTableItem;
 
-public class TimeTableActivityAdapter extends RecyclerView.Adapter<TimeTableActivityAdapter.FullTimeTableViewHolder>{
+public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder>{
 
     private List<LecturerTableItem> data;
 
-    private String currentDay;
-
-    public TimeTableActivityAdapter(List<LecturerTableItem> data){
+    public TimeTableAdapter(List<LecturerTableItem> data) {
         this.data = data;
     }
 
-
     @NonNull
     @Override
-    public FullTimeTableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TimeTableViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.time_table_list_item,parent,false);
-        FullTimeTableViewHolder viewHolder = new FullTimeTableViewHolder(view);
+        TimeTableViewHolder viewHolder = new TimeTableViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FullTimeTableViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
 //        holder.tvDay.setVisibility(View.GONE);
 //        holder.tvDay.setText(data.get(position).getDayName());
 //        int lessonNumber = data.get(position).getLessonNumber();
@@ -57,7 +54,6 @@ public class TimeTableActivityAdapter extends RecyclerView.Adapter<TimeTableActi
 //        }else{
 //            holder.layout.setBackgroundResource(R.drawable.item_bg_first_week);
 //        }
-
     }
 
     @Override
@@ -65,13 +61,14 @@ public class TimeTableActivityAdapter extends RecyclerView.Adapter<TimeTableActi
         return data.size();
     }
 
-    public class FullTimeTableViewHolder extends RecyclerView.ViewHolder{
+
+    public class TimeTableViewHolder extends RecyclerView.ViewHolder{
 
         ConstraintLayout layout;
 
         TextView tvDay, tvLessonName, tvLessonRoom, tvLessonGroups;
 
-        public FullTimeTableViewHolder(@NonNull View itemView) {
+        public TimeTableViewHolder(@NonNull View itemView) {
             super(itemView);
 
             layout = itemView.findViewById(R.id.rootItemLayout);

@@ -1,7 +1,6 @@
 package zeek1910.com.myapplication.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -17,9 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -37,9 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import zeek1910.com.myapplication.activities.TimeTableActivity;
-import zeek1910.com.myapplication.db.RoomDB;
-import zeek1910.com.myapplication.db.TempTableItem;
+import zeek1910.com.myapplication.models.LecturerTableItem;
 import zeek1910.com.myapplication.interfaces.APIInterface;
 import zeek1910.com.myapplication.interfaces.OnRecyclerViewItemClickListener;
 import zeek1910.com.myapplication.R;
@@ -65,7 +60,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     private List<Lecturer> lecturers;
     private List<Group> groups;
-    private List<TempTableItem> data;
+    private List<LecturerTableItem> data;
+    private List<String[]> tempData;
 
     private Retrofit retrofit;
     private APIInterface service;
@@ -97,6 +93,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         groups = new ArrayList<>();
 
         data = new ArrayList<>();
+        tempData = new ArrayList<>();
 
         adapterOwnersList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
 
@@ -226,7 +223,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     class ParceShedule extends AsyncTask<String, Void, Void> {
 
-        RoomDB database;
+        //RoomDB database;
 
         @Override
         protected void onPreExecute() {
@@ -236,25 +233,10 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         @Override
         protected Void doInBackground(String... strings) {
-            database = RoomDB.getInstance(getContext());
-            database.tableDao().clearTable();
+            //database = RoomDB.getInstance(getContext());
+            //database.tableDao().clearTable();
             data.clear();
             String url = BASE_URL + "schedule/lecturer/" +strings[0];
-            parce(url);
-
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void avoid) {
-            super.onPostExecute(avoid);
-            Intent intent = new Intent(getContext(), TimeTableActivity.class);
-            intent.putExtra(TimeTableActivity.KEY_FULLNAME, fullName);
-            startActivity(intent);
-        }
-
-        void parce(String url){
             try {
                 Document doc = Jsoup.connect(url).get();
 
@@ -262,89 +244,105 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 Element table = tables.get(0);
 
                 Elements table_data = table.getElementsByTag("td");
-                //Log.d("devcpp","table_data size -> "+table_data.size());
 
-                String currentDay = "";
+                String[] days = new String[]{"Понеділок","Вівторок","Середа","Четвер","П'ятниця"};
+                int currentDay = -1;
 
                 int indexFirstLesson = 1;
-                int indexSecondLesson = 3;
-                int indexThirdLesson = 5;
-                int indexFourthLesson = 7;
+                int indexSecondLesson = 2;
+                int indexThirdLesson = 3;
+                int indexFourthLesson = 4;
                 int currentLesson = -1;
 
                 for(int i = 0; i <table_data.size();i++){
-                    //Log.d("devcpp",i+" - "+table_data.get(i).html());
+
                     if(table_data.get(i).html().equals("<i class=\"fal fa-alarm-exclamation\"></i>")){
                         table_data.remove(i);
                     }
                     if (table_data.get(i).html().equals("Понеділок")){
-                        currentDay ="Понеділок";
+                        currentDay = 0;
                         continue;
                     }
                     if (table_data.get(i).html().equals("Вівторок")){
-                        currentDay = "Вівторок";
+                        currentDay = 1;
                         continue;
                     }
                     if (table_data.get(i).html().equals("Середа")){
-                        currentDay = "Середа";
+                        currentDay = 2;
                         continue;
                     }
                     if (table_data.get(i).html().equals("Четвер")){
-                        currentDay = "Четвер";
+                        currentDay = 3;
                         continue;
                     }
                     if (table_data.get(i).html().equals("П'ятниця")){
-                        currentDay = "П'ятниця";
+                        currentDay = 4;
                         continue;
                     }
 
                     if (table_data.get(i).html().equals("08:00 - 09:35")){
+                        sortData(days[currentDay],currentLesson);
                         currentLesson = indexFirstLesson;
-                        if(data.size()!=0){
-                            sortData();
-                        }
                         continue;
                     }
                     if (table_data.get(i).html().equals("09:50 - 11:25")){
+                        sortData(days[currentDay],currentLesson);
                         currentLesson = indexSecondLesson;
-                        sortData();
                         continue;
                     }
                     if (table_data.get(i).html().equals("11:55 - 13:30")){
+                        sortData(days[currentDay],currentLesson);
                         currentLesson = indexThirdLesson;
-                        sortData();
                         continue;
                     }
                     if (table_data.get(i).html().equals("13:45 - 15:20")){
+                        sortData(days[currentDay],currentLesson);
                         currentLesson = indexFourthLesson;
-                        sortData();
                         continue;
                     }
 
                     String[] lessonInfo = getLessonInfo(table_data.get(i).html());
 
-                    data.add(new TempTableItem(currentDay,fullName,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
-                    currentLesson++;
+                    tempData.add(lessonInfo);
                 }
-
-                for(int i=0; i< data.size();i++){
-                    //Log.d("devcpp", data.get(i).toString());
-                    database.tableDao().insert(data.get(i));
-                }
+                sortData(currentDay,currentLesson);
 
             } catch (IOException e) {
                 Log.d("devcpp",e.getMessage());
             }
-        }
 
-        private void sortData() {
-            if (data.size() % 2 != 0) {
-                TempTableItem item = new TempTableItem(data.get(data.size() - 1));
-                item.setLessonNumber(item.getLessonNumber() + 1);
-                data.add(item);
+            for (int i = 0; i <data.size(); i++){
+                Log.d("devcpp",data.get(i).toString());
             }
+
+            return null;
         }
 
+        private void sortData(String currentDay, int currentLesson) {
+            if (tempData.size() == 1) {
+                //data.add(new LecturerTableItem(currentDay,fullName,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
+                LecturerTableItem item = new LecturerTableItem(currentDay,fullName,currentLesson,tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0],tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0]);
+                data.add(item);
+            }else if (tempData.size() == 2){
+                LecturerTableItem item = new LecturerTableItem(currentDay,fullName,currentLesson,tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0],tempData.get(1)[1],tempData.get(1)[2],tempData.get(1)[0]);
+                data.add(item);
+            }else{
+                Log.d("devcpp","Error sort data");
+            }
+
+            tempData.clear();
+        }
+
+
+        @Override
+        protected void onPostExecute(Void avoid) {
+            super.onPostExecute(avoid);
+
+
+            //Intent intent = new Intent(getContext(), TimeTableActivity.class);
+            //intent.putExtra(TimeTableActivity.KEY_FULLNAME, fullName);
+            //startActivity(intent);
+        }
 
         String[] getLessonInfo(String str){
             String[] result = {"","",""};

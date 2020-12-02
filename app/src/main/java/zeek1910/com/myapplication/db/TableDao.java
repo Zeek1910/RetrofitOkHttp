@@ -6,36 +6,26 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import zeek1910.com.myapplication.models.LecturerTableItem;
+
 import static androidx.room.OnConflictStrategy.REPLACE;
 
 @Dao
 public interface TableDao {
 
-
     @Insert(onConflict = REPLACE)
-    void insert(TempTableItem tempTableItem);
+    void insert(LecturerTableItem lecturerTableItem);
 
-    @Insert(onConflict = REPLACE)
-    void insertToMainTable(TableItem tableItem);
+    @Query("SELECT * FROM lecturer_time_table")
+    List<LecturerTableItem> getAll();
 
-    @Query("SELECT * FROM temp_table")
-    List<TempTableItem> getAll();
+    @Query("SELECT * FROM lecturer_time_table WHERE owner =:own")
+    List<LecturerTableItem> getSheduleByLecturer(String own);
 
-    @Query("SELECT * FROM temp_table WHERE owner =:own")
-    List<TempTableItem> getSheduleByLecturer(String own);
-
-    @Query("DELETE FROM temp_table WHERE owner = :own")
+    @Query("DELETE FROM lecturer_time_table WHERE owner = :own")
     void delete(String own);
 
-    @Query("DELETE FROM temp_table")
+    @Query("DELETE FROM lecturer_time_table")
     void clearTable();
-
-
-    @Query("SELECT * FROM shedule_table WHERE owner =:own")
-    List<TableItem> getSheduleByLecturerFromSheduleTable(String own);
-
-    @Query("DELETE FROM shedule_table WHERE owner = :own")
-    void deleteFromSheduleTable(String own);
-
 
 }
