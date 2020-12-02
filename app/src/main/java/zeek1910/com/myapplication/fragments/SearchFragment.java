@@ -34,11 +34,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import zeek1910.com.myapplication.adapters.TimeTableAdapter;
 import zeek1910.com.myapplication.models.LecturerTableItem;
 import zeek1910.com.myapplication.interfaces.APIInterface;
 import zeek1910.com.myapplication.interfaces.OnRecyclerViewItemClickListener;
 import zeek1910.com.myapplication.R;
-import zeek1910.com.myapplication.adapters.SearchFragmentAdapter;
 import zeek1910.com.myapplication.models.Group;
 import zeek1910.com.myapplication.models.Lecturer;
 
@@ -47,8 +47,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapterLecturers;
-    private RecyclerView.Adapter adapterGroups;
+    private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private ProgressBar progressBar;
@@ -65,14 +64,10 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     private Retrofit retrofit;
     private APIInterface service;
-    Callback<List<Lecturer>> callback1;
+    Callback<List<Lecturer>> callbackFaculty;
     Callback<List<Group>> callback2;
 
-    private int currentTypeAdapter = -1;
-
     private int faculty = -1;
-
-    String own, fullName;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -97,16 +92,12 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         adapterOwnersList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
 
-        adapterLecturers = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_LECTURERS,this::onItemClick);
-        adapterGroups = new SearchFragmentAdapter(lecturers, groups, SearchFragmentAdapter.TYPE_GROUPS,this::onItemClick);
+        //adapter = new TimeTableAdapter();
 
-        callback1 = new Callback<List<Lecturer>>() {
+        callbackFaculty = new Callback<List<Lecturer>>() {
             @Override
             public void onResponse(Call<List<Lecturer>> call, Response<List<Lecturer>> response) {
-                progressBar.setVisibility(View.INVISIBLE);
                 lecturers.addAll(response.body());
-                recyclerView.setAdapter(adapterLecturers);
-                currentTypeAdapter = SearchFragmentAdapter.TYPE_LECTURERS;
 
                 for (Lecturer lecturer:lecturers) {
                     adapterOwnersList.add(lecturer.getActName());
@@ -117,7 +108,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
             @Override
             public void onFailure(Call<List<Lecturer>> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
                 Log.d("devcpp", t.getMessage());
             }
         };
@@ -125,16 +115,13 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         callback2 = new Callback<List<Group>>() {
             @Override
             public void onResponse(Call<List<Group>> call, Response<List<Group>> response) {
-                progressBar.setVisibility(View.INVISIBLE);
-                groups.addAll(response.body());
-                recyclerView.setAdapter(adapterGroups);
-                currentTypeAdapter = SearchFragmentAdapter.TYPE_GROUPS;
+
             }
 
             @Override
             public void onFailure(Call<List<Group>> call, Throwable t) {
-                progressBar.setVisibility(View.INVISIBLE);
                 Log.d("devcpp", t.getMessage());
+
             }
         };
     }
@@ -148,7 +135,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
-
         for(int i = 1; i <= 8; i++){
             adapterFacultysList.add("Факультет "+i);
         }
@@ -161,7 +147,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                     lecturers.clear();
                     adapterOwnersList.clear();
                     autoCompleteTextViewOwners.dismissDropDown();
-                    service.getLecturersByFaculty(faculty).enqueue(callback1);
+                    service.getLecturersByFaculty(faculty).enqueue(callbackFaculty);
                 }
             }
         });
@@ -173,6 +159,11 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 InputMethodManager manager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(autoCompleteTextViewOwners.getWindowToken(), 0);
                 autoCompleteTextViewOwners.clearFocus();
+                new ParceShedule().execute(lecturers.get(position).getSlug(),
+                        lecturers.get(position).getActName());
+
+                autoCompleteTextViewOwners.setEnabled(false);
+                autoCompleteTextViewFacultys.setEnabled(false);
             }
         });
 
@@ -193,16 +184,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     @Override
     public void onItemClick(int position) {
-        if (currentTypeAdapter == SearchFragmentAdapter.TYPE_LECTURERS){
-            //Log.d("devcpp",lecturers.get(position).toString());
-            fullName = lecturers.get(position).getActName();
-            own = lecturers.get(position).getSlug();
-            new ParceShedule().execute(lecturers.get(position).getSlug());
-        }
-
-        if (currentTypeAdapter == SearchFragmentAdapter.TYPE_GROUPS){
-            //Log.d("devcpp",groups.get(position).toString());
-        }
+        //TODO Recycler item click listener
     }
 
     @Override
@@ -223,7 +205,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     class ParceShedule extends AsyncTask<String, Void, Void> {
 
-        //RoomDB database;
+        private String fullName = "";
 
         @Override
         protected void onPreExecute() {
@@ -233,10 +215,10 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         @Override
         protected Void doInBackground(String... strings) {
-            //database = RoomDB.getInstance(getContext());
-            //database.tableDao().clearTable();
             data.clear();
+
             String url = BASE_URL + "schedule/lecturer/" +strings[0];
+            fullName = strings[1];
             try {
                 Document doc = Jsoup.connect(url).get();
 
@@ -313,10 +295,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 Log.d("devcpp",e.getMessage());
             }
 
-            for (int i = 0; i <data.size(); i++){
-                Log.d("devcpp",data.get(i).toString());
-            }
-
             return null;
         }
 
@@ -340,7 +318,10 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         protected void onPostExecute(Void avoid) {
             super.onPostExecute(avoid);
 
-
+            autoCompleteTextViewOwners.setEnabled(true);
+            autoCompleteTextViewFacultys.setEnabled(true);
+            adapter = new TimeTableAdapter();
+            recyclerView.setAdapter(adapter);
             //Intent intent = new Intent(getContext(), TimeTableActivity.class);
             //intent.putExtra(TimeTableActivity.KEY_FULLNAME, fullName);
             //startActivity(intent);
