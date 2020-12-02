@@ -50,7 +50,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private ProgressBar progressBar;
     private AutoCompleteTextView autoCompleteTextViewFacultys;
     private AutoCompleteTextView autoCompleteTextViewOwners;
     private MaterialButtonToggleGroup toggleGroup;
@@ -91,8 +90,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         tempData = new ArrayList<>();
 
         adapterOwnersList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
-
-        //adapter = new TimeTableAdapter();
 
         callbackFaculty = new Callback<List<Lecturer>>() {
             @Override
@@ -169,9 +166,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         toggleGroup = view.findViewById(R.id.materialButtonToggleGroup);
         toggleGroup.addOnButtonCheckedListener(this);
-
-        progressBar = view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
 
         recyclerView = view.findViewById(R.id.SearchRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -300,14 +294,11 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         private void sortData(String currentDay, int currentLesson) {
             if (tempData.size() == 1) {
-                //data.add(new LecturerTableItem(currentDay,fullName,currentLesson,lessonInfo[1],lessonInfo[2],lessonInfo[0]));
                 LecturerTableItem item = new LecturerTableItem(currentDay,fullName,currentLesson,tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0],tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0]);
                 data.add(item);
             }else if (tempData.size() == 2){
                 LecturerTableItem item = new LecturerTableItem(currentDay,fullName,currentLesson,tempData.get(0)[1],tempData.get(0)[2],tempData.get(0)[0],tempData.get(1)[1],tempData.get(1)[2],tempData.get(1)[0]);
                 data.add(item);
-            }else{
-                Log.d("devcpp","Error sort data");
             }
 
             tempData.clear();
@@ -320,11 +311,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
             autoCompleteTextViewOwners.setEnabled(true);
             autoCompleteTextViewFacultys.setEnabled(true);
-            adapter = new TimeTableAdapter();
+            adapter = new TimeTableAdapter(data);
             recyclerView.setAdapter(adapter);
-            //Intent intent = new Intent(getContext(), TimeTableActivity.class);
-            //intent.putExtra(TimeTableActivity.KEY_FULLNAME, fullName);
-            //startActivity(intent);
         }
 
         String[] getLessonInfo(String str){

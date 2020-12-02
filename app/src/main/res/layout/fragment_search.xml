@@ -97,23 +97,16 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/SearchRecyclerView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayoutOwner" />
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/SearchRecyclerView"
-            app:layout_constraintEnd_toEndOf="@+id/SearchRecyclerView"
-            app:layout_constraintStart_toStartOf="@+id/SearchRecyclerView"
-            app:layout_constraintTop_toTopOf="@+id/SearchRecyclerView" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

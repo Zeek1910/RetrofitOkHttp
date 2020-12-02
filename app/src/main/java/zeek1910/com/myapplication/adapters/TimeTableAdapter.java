@@ -1,8 +1,10 @@
 package zeek1910.com.myapplication.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,27 +35,50 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     @Override
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
-//        holder.tvDay.setVisibility(View.GONE);
-//        holder.tvDay.setText(data.get(position).getDayName());
-//        int lessonNumber = data.get(position).getLessonNumber();
-//        String lessonName = data.get(position).getLessonName();
-//        String lessonGroups = data.get(position).getLessonGroup();
-//        String lessonRoom = data.get(position).getLessonRoom();
-//        holder.tvLessonName.setText(lessonName);
-//        holder.tvLessonGroups.setText(lessonGroups);
-//        holder.tvLessonRoom.setText(lessonRoom);
-//        if(lessonName.equals("")) {
-//            holder.tvLessonName.setText("нету");
-//        }
-//        if(position == 0 || position == 8 || position == 16 || position == 24 || position == 32){
-//            holder.tvDay.setVisibility(View.VISIBLE);
-//        }
-//
-//        if (position % 2 != 0){
-//            holder.layout.setBackgroundResource(R.drawable.item_bg_second_week);
-//        }else{
-//            holder.layout.setBackgroundResource(R.drawable.item_bg_first_week);
-//        }
+        holder.tvDayName.setText(data.get(position).getDayName());
+        holder.tvDayName.setVisibility(View.GONE);
+        if(position == 0 || position == 4 || position == 8 || position == 12 || position == 16){
+            holder.tvDayName.setVisibility(View.VISIBLE);
+        }
+
+        int lessonNumber = data.get(position).getLessonNumber();
+        String time = "";
+        switch (lessonNumber){
+            case 1:
+                time = "08:00 - 09:35";
+                break;
+            case 2:
+                time = "09:50 - 11:25";
+                break;
+            case 3:
+                time = "11:55 - 13:30";
+                break;
+            case 4:
+                time = "13:30 - 15:20";
+                break;
+        }
+        holder.tvLessonNumber.setText(time);
+
+        String topLessonName = data.get(position).getTopLessonName();
+        String topLessonOwner = data.get(position).getTopLessonGroup();
+        String topLessonRoom = data.get(position).getTopLessonRoom();
+
+        String botLessonName = data.get(position).getBotLessonName();
+        String botLessonOwner = data.get(position).getBotLessonGroup();
+        String botLessonRoom = data.get(position).getBotLessonRoom();
+
+        holder.tvTopLessonName.setText(topLessonName);
+        holder.tvTopLessonOwner.setText(topLessonOwner);
+        holder.tvTopLessonRoom.setText(topLessonRoom);
+
+        if(topLessonName.equals(botLessonName) && topLessonOwner.equals(botLessonOwner) && topLessonRoom.equals(botLessonRoom)){
+            holder.layoutBot.setVisibility(View.GONE);
+        }else{
+            holder.tvBotLessonName.setText(botLessonName);
+            holder.tvBotLessonOwner.setText(botLessonOwner);
+            holder.tvBotLessonRoom.setText(botLessonRoom);
+            holder.layoutBot.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -64,19 +89,25 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     public class TimeTableViewHolder extends RecyclerView.ViewHolder{
 
-        ConstraintLayout layout;
+        LinearLayout layoutBot;
 
-        TextView tvDay, tvLessonName, tvLessonRoom, tvLessonGroups;
+        TextView tvDayName, tvLessonNumber, tvTopLessonName, tvTopLessonRoom, tvTopLessonOwner, tvBotLessonName, tvBotLessonRoom, tvBotLessonOwner;
 
         public TimeTableViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            layout = itemView.findViewById(R.id.rootItemLayout);
+            layoutBot = itemView.findViewById(R.id.lessonBot);
 
-            tvDay = itemView.findViewById(R.id.textViewDayNasme);
-            tvLessonName = itemView.findViewById(R.id.textViewLessonName);
-            tvLessonRoom = itemView.findViewById(R.id.textViewRooms);
-            tvLessonGroups = itemView.findViewById(R.id.textViewGroups);
+            tvDayName = itemView.findViewById(R.id.textViewDayName);
+            tvLessonNumber = itemView.findViewById(R.id.textViewLessonNumber);
+
+            tvTopLessonName = itemView.findViewById(R.id.textViewTopLessonName);
+            tvTopLessonRoom = itemView.findViewById(R.id.textViewTopRoom);
+            tvTopLessonOwner = itemView.findViewById(R.id.textViewTopOwner);
+
+            tvBotLessonName = itemView.findViewById(R.id.textViewBotLessonName);
+            tvBotLessonRoom = itemView.findViewById(R.id.textViewBotRoom);
+            tvBotLessonOwner = itemView.findViewById(R.id.textViewBotOwner);
         }
     }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 
 import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
-import zeek1910.com.myapplication.adapters.TimeTableActivityAdapter;
 import zeek1910.com.myapplication.models.LecturerTableItem;
 import zeek1910.com.myapplication.db.RoomDB;
 
@@ -62,7 +61,7 @@ public class TimeTableActivity extends AppCompatActivity {
                 public void run() {
                     RoomDB database = RoomDB.getInstance(getBaseContext());
                     List<LecturerTableItem> data = database.tableDao().getSheduleByLecturer(fullName);
-                    adapter = new TimeTableActivityAdapter(data);
+                    //adapter = new TimeTableActivityAdapter(data);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -83,7 +82,7 @@ public class TimeTableActivity extends AppCompatActivity {
                     for (LecturerTableItem item:data) {
                         //lecturerTableItems.add(new LecturerTableItem(item));
                     }
-                    adapter = new TimeTableActivityAdapter(lecturerTableItems);
+                    //adapter = new TimeTableActivityAdapter(lecturerTableItems);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

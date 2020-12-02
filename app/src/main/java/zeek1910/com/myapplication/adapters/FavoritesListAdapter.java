@@ -17,13 +17,13 @@ import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.activities.TimeTableActivity;
 
-public class FavoritesFragmentAdapter extends RecyclerView.Adapter<FavoritesFragmentAdapter.FavoritesViewHolder> {
+public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdapter.FavoritesViewHolder> {
 
     private List<String> data;
     private Context context;
     private AppSettings appSettings;
 
-    public FavoritesFragmentAdapter(Context cntx){
+    public FavoritesListAdapter(Context cntx){
         context = cntx;
         appSettings = AppSettings.getInstance(cntx);
         data = appSettings.getFavoritesTimeTables();

@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import zeek1910.com.myapplication.R;
-import zeek1910.com.myapplication.adapters.FavoritesFragmentAdapter;
+import zeek1910.com.myapplication.adapters.FavoritesListAdapter;
 
 
 
@@ -44,7 +44,7 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new FavoritesFragmentAdapter(getContext());
+        adapter = new FavoritesListAdapter(getContext());
         recyclerView.setAdapter(adapter);
 
         return view;
