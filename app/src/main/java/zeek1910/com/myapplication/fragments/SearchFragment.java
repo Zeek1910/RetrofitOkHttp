@@ -281,7 +281,9 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                     }
 
                     if (table_data.get(i).html().equals("08:00 - 09:35")){
-                        sortData(days[currentDay],currentLesson);
+                        if(currentDay!=0){
+                            sortData(days[currentDay-1],currentLesson);
+                        }
                         currentLesson = indexFirstLesson;
                         continue;
                     }
@@ -305,7 +307,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
                     tempData.add(lessonInfo);
                 }
-                sortData(currentDay,currentLesson);
+                sortData(days[currentDay],currentLesson);
 
             } catch (IOException e) {
                 Log.d("devcpp",e.getMessage());
