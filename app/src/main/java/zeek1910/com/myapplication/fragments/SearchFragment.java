@@ -53,6 +53,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     private AutoCompleteTextView autoCompleteTextViewFacultys;
     private AutoCompleteTextView autoCompleteTextViewOwners;
     private MaterialButtonToggleGroup toggleGroup;
+    private ProgressBar progressBar;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -130,6 +131,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         autoCompleteTextViewFacultys = view.findViewById(R.id.facultySelect);
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
         for(int i = 1; i <= 8; i++){
@@ -156,11 +159,16 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 InputMethodManager manager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 manager.hideSoftInputFromWindow(autoCompleteTextViewOwners.getWindowToken(), 0);
                 autoCompleteTextViewOwners.clearFocus();
-                new ParceShedule().execute(lecturers.get(position).getSlug(),
-                        lecturers.get(position).getActName());
-
+                String text = autoCompleteTextViewOwners.getText().toString();
+                for (Lecturer lecturer:lecturers) {
+                    if (lecturer.getActName().equals(text)){
+                        new ParceShedule().execute(lecturer.getSlug(),
+                                lecturer.getActName());
+                    }
+                }
                 autoCompleteTextViewOwners.setEnabled(false);
                 autoCompleteTextViewFacultys.setEnabled(false);
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -313,6 +321,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             autoCompleteTextViewFacultys.setEnabled(true);
             adapter = new TimeTableAdapter(data);
             recyclerView.setAdapter(adapter);
+            progressBar.setVisibility(View.GONE);
         }
 
         String[] getLessonInfo(String str){
