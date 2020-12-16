@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -54,6 +55,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     private AutoCompleteTextView autoCompleteTextViewOwners;
     private MaterialButtonToggleGroup toggleGroup;
     private ProgressBar progressBar;
+    private Button btnFav;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -133,6 +135,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
+        btnFav = view.findViewById(R.id.btnAddToFav);
+        btnFav.setVisibility(View.GONE);
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
         for(int i = 1; i <= 8; i++){
@@ -322,6 +326,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             adapter = new TimeTableAdapter(data);
             recyclerView.setAdapter(adapter);
             progressBar.setVisibility(View.GONE);
+            btnFav.setVisibility(View.VISIBLE);
         }
 
         String[] getLessonInfo(String str){
