@@ -19,6 +19,7 @@ import zeek1910.com.myapplication.models.LecturerTableItem;
 public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableViewHolder>{
 
     private List<LecturerTableItem> data;
+    private int currentPosition = -1;
 
     public TimeTableAdapter(List<LecturerTableItem> data) {
         this.data = data;
@@ -35,6 +36,9 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     @Override
     public void onBindViewHolder(@NonNull TimeTableViewHolder holder, int position) {
+
+        currentPosition = position;
+
         holder.tvDayName.setText(data.get(position).getDayName());
         holder.tvDayName.setVisibility(View.GONE);
         if(position == 0 || position == 4 || position == 8 || position == 12 || position == 16){
@@ -86,6 +90,9 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
         return data.size();
     }
 
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
 
     public class TimeTableViewHolder extends RecyclerView.ViewHolder{
 

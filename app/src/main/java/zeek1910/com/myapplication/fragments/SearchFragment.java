@@ -16,10 +16,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +28,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import retrofit2.Call;
@@ -47,15 +48,17 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
+    private String  nomDenom = "";
+
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private TimeTableAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private AutoCompleteTextView autoCompleteTextViewFacultys;
     private AutoCompleteTextView autoCompleteTextViewOwners;
     private MaterialButtonToggleGroup toggleGroup;
     private ProgressBar progressBar;
-    private Button btnFav;
+    private TextInputLayout textInputLayoutFaculty, textInputLayoutOwner;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -135,8 +138,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
-        btnFav = view.findViewById(R.id.btnAddToFav);
-        btnFav.setVisibility(View.GONE);
+        textInputLayoutFaculty = view.findViewById(R.id.textInputLayoutFaculty);
+        textInputLayoutOwner = view.findViewById(R.id.textInputLayoutOwner);
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
         for(int i = 1; i <= 8; i++){
@@ -227,6 +230,12 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             fullName = strings[1];
             try {
                 Document doc = Jsoup.connect(url).get();
+
+                Elements temp = doc.getElementsByClass("x-head");
+                nomDenom = temp.get(0).html().substring(temp.get(0).html().indexOf("(")+1);
+                nomDenom = nomDenom.replace(")","");
+
+                //Log.d("devcpp","elements-> "+nomDenom);
 
                 Elements tables = doc.getElementsByClass("table");
                 Element table = tables.get(0);
@@ -326,7 +335,6 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             adapter = new TimeTableAdapter(data);
             recyclerView.setAdapter(adapter);
             progressBar.setVisibility(View.GONE);
-            btnFav.setVisibility(View.VISIBLE);
         }
 
         String[] getLessonInfo(String str){
