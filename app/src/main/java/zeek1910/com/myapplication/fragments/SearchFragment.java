@@ -16,8 +16,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -58,7 +62,9 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     private AutoCompleteTextView autoCompleteTextViewOwners;
     private MaterialButtonToggleGroup toggleGroup;
     private ProgressBar progressBar;
-    private TextInputLayout textInputLayoutFaculty, textInputLayoutOwner;
+    //private TextInputLayout textInputLayoutFaculty, textInputLayoutOwner;
+    private TextView textViewCurrentDay;
+    private LinearLayout recyclerViewPanel;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -134,12 +140,18 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
+        //AppBarLayout appBarLayout;
+        //appBarLayout.setExpanded(true);
+
         autoCompleteTextViewFacultys = view.findViewById(R.id.facultySelect);
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
         progressBar = view.findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
-        textInputLayoutFaculty = view.findViewById(R.id.textInputLayoutFaculty);
-        textInputLayoutOwner = view.findViewById(R.id.textInputLayoutOwner);
+        //textInputLayoutFaculty = view.findViewById(R.id.textInputLayoutFaculty);
+        //textInputLayoutOwner = view.findViewById(R.id.textInputLayoutOwner);
+        textViewCurrentDay = view.findViewById(R.id.text_view_current_date);
+        recyclerViewPanel = view.findViewById(R.id.recyclerViewPanel);
+        recyclerViewPanel.setVisibility(View.GONE);
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
         for(int i = 1; i <= 8; i++){
@@ -187,6 +199,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setVisibility(View.GONE);
 
         return view;
     }
@@ -211,6 +224,40 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
 
     }
 
+    String getDateAndDay(){
+        String currentDayName = "";
+        Calendar calendar= Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        switch (dayOfWeek){
+            case 1:
+                currentDayName = "Неділя";
+                break;
+            case 2:
+                currentDayName = "Понеділок";
+                break;
+            case 3:
+                currentDayName = "Вівторок";
+                break;
+            case 4:
+                currentDayName = "Середа";
+                break;
+            case 5:
+                currentDayName = "Четверг";
+                break;
+            case 6:
+                currentDayName = "П'ятниця";
+                break;
+            case 7:
+                currentDayName = "Субота";
+                break;
+        }
+        //int month = calendar.get(Calendar.MONTH);
+        //int day = calendar.get(Calendar.DATE);
+
+        return currentDayName+" ("+nomDenom+")";
+        //return ""+day+"."+month+" "+currentDayName+"("+nomDenom+")";
+    }
+
 
     class ParceShedule extends AsyncTask<String, Void, Void> {
 
@@ -219,6 +266,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            recyclerViewPanel.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
         }
 
 
@@ -334,7 +383,11 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             autoCompleteTextViewFacultys.setEnabled(true);
             adapter = new TimeTableAdapter(data);
             recyclerView.setAdapter(adapter);
+            recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+
+            textViewCurrentDay.setText(getDateAndDay());
+            recyclerViewPanel.setVisibility(View.VISIBLE);
         }
 
         String[] getLessonInfo(String str){

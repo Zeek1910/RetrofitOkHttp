@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -115,6 +116,7 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
             tvBotLessonName = itemView.findViewById(R.id.textViewBotLessonName);
             tvBotLessonRoom = itemView.findViewById(R.id.textViewBotRoom);
             tvBotLessonOwner = itemView.findViewById(R.id.textViewBotOwner);
+
         }
     }
 }

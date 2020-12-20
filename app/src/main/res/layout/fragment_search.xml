@@ -8,13 +8,15 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/purple_200">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:orientation="vertical"
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ff0000">
+            android:background="@drawable/app_bar_layout_bg"
+            android:orientation="vertical">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:layout_width="match_parent"
@@ -24,6 +26,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
                     app:layout_collapseMode="parallax">
 
                     <com.google.android.material.button.MaterialButtonToggleGroup
@@ -112,33 +115,55 @@
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            <Button
-                android:id="@+id/btnAddToFav"
-                android:layout_width="match_parent"
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AddToFav"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                android:layout_gravity="bottom|center_horizontal"
+                android:indeterminateTint="@color/blue_600" />
+
+            <LinearLayout
+                android:id="@+id/recyclerViewPanel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/current_date_bg"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp">
+
+                <TextView
+                    android:id="@+id/text_view_current_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text=" 18.12 Вівторок (чисельник)"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    app:layout_scrollFlags="scroll|enterAlways" />
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/white"
+                    android:src="@drawable/ic_baseline_favorite_border_24" />
+            </LinearLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/SearchRecyclerView"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:padding="5dp"
-            app:layout_anchorGravity="bottom" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@color/blue_600"
-            app:layout_anchor="@+id/SearchRecyclerView"
-            app:layout_anchorGravity="center" />
+            app:layout_anchorGravity="bottom"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
