@@ -4,18 +4,22 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +27,6 @@ import android.widget.TextView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.textfield.TextInputLayout;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -40,7 +43,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.adapters.TimeTableAdapter;
+import zeek1910.com.myapplication.db.RoomDB;
 import zeek1910.com.myapplication.models.LecturerTableItem;
 import zeek1910.com.myapplication.interfaces.APIInterface;
 import zeek1910.com.myapplication.interfaces.OnRecyclerViewItemClickListener;
@@ -53,6 +58,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     public static final String BASE_URL = "https://profkomstud.khai.edu/";
 
     private String  nomDenom = "";
+    private String favName = "";
 
     private RecyclerView recyclerView;
     private TimeTableAdapter adapter;
@@ -63,8 +69,11 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     private MaterialButtonToggleGroup toggleGroup;
     private ProgressBar progressBar;
     //private TextInputLayout textInputLayoutFaculty, textInputLayoutOwner;
-    private TextView textViewCurrentDay;
+    private TextView textViewCurrentDayName,textViewCurrentDate;
     private LinearLayout recyclerViewPanel;
+    private CoordinatorLayout coordinatorLayout;
+    private ImageButton imageButtonFav;
+    private AppBarLayout appBarLayout;
 
     ArrayAdapter<String> adapterOwnersList;
 
@@ -79,6 +88,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     Callback<List<Group>> callback2;
 
     private int faculty = -1;
+    private int prew_vertical_off_set = 0;
+    private boolean isCollapsed = false;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -140,8 +151,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_search, container, false);
 
-        //AppBarLayout appBarLayout;
-        //appBarLayout.setExpanded(true);
+        appBarLayout = view.findViewById(R.id.appBarLayout);
 
         autoCompleteTextViewFacultys = view.findViewById(R.id.facultySelect);
         autoCompleteTextViewOwners = view.findViewById(R.id.ownerSelect);
@@ -149,9 +159,36 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         progressBar.setVisibility(View.GONE);
         //textInputLayoutFaculty = view.findViewById(R.id.textInputLayoutFaculty);
         //textInputLayoutOwner = view.findViewById(R.id.textInputLayoutOwner);
-        textViewCurrentDay = view.findViewById(R.id.text_view_current_date);
+        textViewCurrentDayName = view.findViewById(R.id.text_view_current_dayName);
+        textViewCurrentDate = view.findViewById(R.id.text_view_current_date);
         recyclerViewPanel = view.findViewById(R.id.recyclerViewPanel);
         recyclerViewPanel.setVisibility(View.GONE);
+
+        coordinatorLayout = view.findViewById(R.id.coordinator);
+
+
+
+        imageButtonFav = view.findViewById(R.id.imageBtnFav);
+        imageButtonFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO Add to fav
+                AppSettings appSettings = AppSettings.getInstance(getContext());
+                appSettings.addTimeTableToFavorites(favName);
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RoomDB database = RoomDB.getInstance(getContext());
+                        for (LecturerTableItem item:data){
+                            database.tableDao().insert(item);
+                        }
+                    }
+                });
+                //thread.run();
+
+                imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_24);
+            }
+        });
 
         ArrayAdapter<String> adapterFacultysList = new ArrayAdapter<String>(getContext(),R.layout.drop_down_menu_item);
         for(int i = 1; i <= 8; i++){
@@ -181,6 +218,7 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 String text = autoCompleteTextViewOwners.getText().toString();
                 for (Lecturer lecturer:lecturers) {
                     if (lecturer.getActName().equals(text)){
+                        favName = lecturer.getActName();
                         new ParceShedule().execute(lecturer.getSlug(),
                                 lecturer.getActName());
                     }
@@ -251,11 +289,9 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
                 currentDayName = "Субота";
                 break;
         }
-        //int month = calendar.get(Calendar.MONTH);
-        //int day = calendar.get(Calendar.DATE);
+
 
         return currentDayName+" ("+nomDenom+")";
-        //return ""+day+"."+month+" "+currentDayName+"("+nomDenom+")";
     }
 
 
@@ -385,8 +421,11 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
-
-            textViewCurrentDay.setText(getDateAndDay());
+            Calendar calendar= Calendar.getInstance();
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DATE);
+            textViewCurrentDate.setText(day+":"+(month+1));
+            textViewCurrentDayName.setText(getDateAndDay());
             recyclerViewPanel.setVisibility(View.VISIBLE);
         }
 
