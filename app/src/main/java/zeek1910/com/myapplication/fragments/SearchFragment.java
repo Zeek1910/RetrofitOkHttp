@@ -23,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -87,6 +88,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     Callback<List<Lecturer>> callbackFaculty;
     Callback<List<Group>> callback2;
 
+    private AppSettings appSettings;
+
     private int faculty = -1;
     private int prew_vertical_off_set = 0;
     private boolean isCollapsed = false;
@@ -99,6 +102,8 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        appSettings = new AppSettings(getContext());
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -172,21 +177,33 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
         imageButtonFav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Add to fav
-                AppSettings appSettings = AppSettings.getInstance(getContext());
-                appSettings.addTimeTableToFavorites(favName);
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        RoomDB database = RoomDB.getInstance(getContext());
-                        for (LecturerTableItem item:data){
-                            database.tableDao().insert(item);
+                if(appSettings.checkFavorites(favName)){
+                    appSettings.removeTimeTableFromFavorites(favName);
+                    imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                    Toast.makeText(getContext(),"Видалено з улюбленого",Toast.LENGTH_SHORT).show();
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RoomDB database = RoomDB.getInstance(getContext());
+                            database.tableDao().delete(favName);
                         }
-                    }
-                });
-                //thread.run();
-
-                imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    });
+                    thread.start();
+                }else{
+                    appSettings.addTimeTableToFavorites(favName);
+                    imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    Toast.makeText(getContext(),"Додано до улюбленого",Toast.LENGTH_SHORT).show();
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RoomDB database = RoomDB.getInstance(getContext());
+                            for (LecturerTableItem item:data){
+                                database.tableDao().insert(item);
+                            }
+                        }
+                    });
+                    thread.start();
+                }
             }
         });
 
@@ -424,8 +441,25 @@ public class SearchFragment extends Fragment implements MaterialButtonToggleGrou
             Calendar calendar= Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DATE);
-            textViewCurrentDate.setText(day+":"+(month+1));
+            String date = "";
+            if (day < 10){
+                date =  "0"+day;
+            }else{
+                date =  ""+day;
+            }
+            if (month<10){
+                date = date+".0"+(month+1);
+            }else{
+                date = date+"."+(month+1);
+            }
+            textViewCurrentDate.setText(date);
             textViewCurrentDayName.setText(getDateAndDay());
+
+            if (appSettings.checkFavorites(favName)){
+                imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_24);
+            }else{
+                imageButtonFav.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+            }
             recyclerViewPanel.setVisibility(View.VISIBLE);
         }
 

@@ -25,7 +25,7 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
 
     public FavoritesListAdapter(Context cntx){
         context = cntx;
-        appSettings = AppSettings.getInstance(cntx);
+        appSettings = new AppSettings(cntx);
         data = appSettings.getFavoritesTimeTables();
     }
 
@@ -67,7 +67,6 @@ public class FavoritesListAdapter extends RecyclerView.Adapter<FavoritesListAdap
                 public void onClick(View v) {
                     Intent intent = new Intent(context, TimeTableActivity.class);
                     intent.putExtra(TimeTableActivity.KEY_FULLNAME, textView.getText().toString());
-                    intent.putExtra(TimeTableActivity.KEY_IS_SHOW_BUTTON, false);
                     context.startActivity(intent);
                 }
             });

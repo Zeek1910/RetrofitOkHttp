@@ -18,22 +18,13 @@ public class AppSettings {
     private Context context;
 
     private SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
-    private static AppSettings instance;
-
-    public static AppSettings getInstance(Context cntx){
-        if (instance == null){
-            instance = new AppSettings(cntx);
-        }
-        return instance;
-    }
-
-    private AppSettings(Context cntx){
+    public AppSettings(Context cntx){
         context = cntx;
         sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        editor.clear();
+        //editor.clear();
     }
 
     public List<String> getFavoritesTimeTables(){
