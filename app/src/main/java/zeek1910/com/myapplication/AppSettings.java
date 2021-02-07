@@ -2,8 +2,10 @@ package zeek1910.com.myapplication;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -24,32 +26,47 @@ public class AppSettings {
         context = cntx;
         sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        //editor.clear();
     }
 
     public List<String> getFavoritesTimeTables(){
-        Set<String> data = sharedPreferences.getStringSet(KEY_FAVORITES,new TreeSet<>());
-        List<String> stringList = new ArrayList<>();
-        stringList.addAll(data);
-        return stringList;
+        String data = sharedPreferences.getString(KEY_FAVORITES, "");
+        if (data.isEmpty()){
+            return new ArrayList<String>();
+        }
+        String[] list = data.split(";");
+        return javaArr2Collection(list);
     }
 
     public void addTimeTableToFavorites(String str){
-        Set<String> data = sharedPreferences.getStringSet(KEY_FAVORITES,new TreeSet<>());
-        data.add(str);
-        editor.putStringSet(KEY_FAVORITES,data);
-        editor.commit();
+        String data = sharedPreferences.getString(KEY_FAVORITES, "");
+        if (data.isEmpty()){
+            data = str;
+        }else{
+            data+=";"+str;
+        }
+        editor.putString(KEY_FAVORITES,data);
+        editor.apply();
+        Log.d("devcpp","fav ->" + data);
     }
 
     public void removeTimeTableFromFavorites(String str){
-        Set<String> data = sharedPreferences.getStringSet(KEY_FAVORITES,new TreeSet<>());
-        data.remove(str);
-        editor.putStringSet(KEY_FAVORITES,data);
-        editor.commit();
+        String data = sharedPreferences.getString(KEY_FAVORITES, "");
+        if(!data.contains(";")){
+            data = data.replace(str,"");
+        }
+        int index = data.indexOf(str);
+        if(index == 0){
+            data = data.replace(str+";","");
+        }
+        if(data.contains(str)){
+            data = data.replace(";"+str,"");
+        }
+        editor.putString(KEY_FAVORITES,data);
+        editor.apply();
     }
 
     public boolean checkFavorites(String str){
-        Set<String> data = sharedPreferences.getStringSet(KEY_FAVORITES,new TreeSet<>());
+        String data = sharedPreferences.getString(KEY_FAVORITES, "");
         if (data.contains(str)){
             return true;
         }
@@ -58,7 +75,7 @@ public class AppSettings {
 
     public void setLastOwner(String own){
         editor.putString(KEY_LAST_OWNER, own);
-        editor.commit();
+        editor.apply();
     }
 
     public String getLastOwner(){
@@ -67,10 +84,20 @@ public class AppSettings {
 
     public void setDefaultOwner(String own){
         editor.putString(KEY_DEFAULT_OWNER, own);
-        editor.commit();
+        editor.apply();
     }
 
     public String getDefaultOwner(){
         return sharedPreferences.getString(KEY_DEFAULT_OWNER,"");
     }
+
+    private ArrayList<String> javaArr2Collection(String[] array){
+        ArrayList<String> stringList = new ArrayList<>();
+        for(int i = 0; i< array.length;i++){
+            stringList.add(array[i]);
+        }
+        return stringList;
+    }
+
+
 }
