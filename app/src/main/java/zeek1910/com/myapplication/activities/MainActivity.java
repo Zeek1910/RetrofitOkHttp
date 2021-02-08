@@ -11,17 +11,23 @@ import android.util.Log;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
 import zeek1910.com.myapplication.db.RoomDB;
+import zeek1910.com.myapplication.models.Lecturer;
+import zeek1910.com.myapplication.models.LecturerTableItem;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private NavHostFragment navHostFragment;
+
+    private List<LecturerTableItem> data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +37,27 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
-        navHostFragment.getNavController().navigate(R.id.searchFragment);
+        navHostFragment.getNavController().navigate(R.id.favoritesFragment);
+
+
+
+        RoomDB database = RoomDB.getInstance(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                data = database.tableDao().getSheduleByLecturerByDay("Пявка Євгеній Валентинович","Вівторок");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (LecturerTableItem item:data){
+                            Log.d("devcpp", item.getBotLessonName());
+                        }
+                    }
+                });
+            }
+        }).start();
+
+
 
     }
 
