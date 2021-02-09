@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private NavHostFragment navHostFragment;
 
-    private List<LecturerTableItem> data;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,24 +37,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
         navHostFragment.getNavController().navigate(R.id.favoritesFragment);
 
-
-
-        RoomDB database = RoomDB.getInstance(this);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                data = database.tableDao().getSheduleByLecturerByDay("Пявка Євгеній Валентинович","Вівторок");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (LecturerTableItem item:data){
-                            Log.d("devcpp", item.getBotLessonName());
-                        }
-                    }
-                });
-            }
-        }).start();
-
+        AppSettings appSettings = new AppSettings(this);
+        appSettings.setDefaultOwner("Пявка Євгеній Валентинович");
 
 
     }
