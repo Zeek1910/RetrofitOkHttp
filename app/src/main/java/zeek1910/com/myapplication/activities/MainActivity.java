@@ -35,12 +35,20 @@ public class MainActivity extends AppCompatActivity {
         navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
-        navHostFragment.getNavController().navigate(R.id.favoritesFragment);
+        //navHostFragment.getNavController().navigate(R.id.favoritesFragment);
 
-        AppSettings appSettings = new AppSettings(this);
-        appSettings.setDefaultOwner("Пявка Євгеній Валентинович");
+        //AppSettings appSettings = new AppSettings(this);
+        //appSettings.setDefaultOwner("Пявка Євгеній Валентинович");
 
+        isLowerWeek();
+    }
 
+    public boolean isLowerWeek(){
+        Calendar calendar= Calendar.getInstance();
+        calendar.set(2021,1,18);
+        calendar.get(Calendar.DAY_OF_YEAR);
+        Log.d("devcpp","");
+        return true;
     }
 
 

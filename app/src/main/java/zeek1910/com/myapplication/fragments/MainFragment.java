@@ -10,12 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
-import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import zeek1910.com.myapplication.AppSettings;
 import zeek1910.com.myapplication.R;
@@ -27,6 +25,10 @@ import zeek1910.com.myapplication.models.LecturerTableItem;
 public class MainFragment extends Fragment {
 
     private List<LecturerTableItem> data;
+
+    private RecyclerView recyclerView;
+    private LinearLayout panel;
+    private TimeTableAdapter adapter;
 
     public MainFragment() {
         // Required empty public constructor
@@ -44,19 +46,14 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_main, container, false);
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView = view.findViewById(R.id.MainRecyclerView);
         recyclerView.setHasFixedSize(true);
-
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setVisibility(View.GONE);
-
-        TimeTableAdapter adapter = new TimeTableAdapter(data);
-        for(int i =0 ; i< data.size();i++){
-            //Log.d("devcpp",data.get(i).getTopLessonName());
-        }
-
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+        panel = view.findViewById(R.id.upPanel);
 
         return view;
     }
@@ -77,7 +74,7 @@ public class MainFragment extends Fragment {
                     }
                 }
                 data = database.tableDao().getSheduleByLecturerByDay(defaultOwner,getDayNameByNumber(currentDay));
-                //Log.d("devcpp",""+data.size());
+                adapter = new TimeTableAdapter(data);
             }
         }).start();
     }
