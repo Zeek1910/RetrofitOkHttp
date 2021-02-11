@@ -68,12 +68,15 @@ public class MainFragment extends Fragment {
             public void run() {
                 int currentDay = getCurrentDay();
                 int currentTime = getCurrentTime();
+                Log.d("devcpp","currentTime->"+currentTime);
                 if (currentTime >= 16){
                     if (++currentDay>6){
                         currentDay = 2;
                     }
                 }
+                //Log.d("devcpp","defaultOwner->"+defaultOwner+" getDayNameByNumber(currentDay)->"+getDayNameByNumber(currentDay));
                 data = database.tableDao().getSheduleByLecturerByDay(defaultOwner,getDayNameByNumber(currentDay));
+                //Log.d("devcpp",""+data.size());
                 adapter = new TimeTableAdapter(data);
             }
         }).start();
@@ -95,7 +98,7 @@ public class MainFragment extends Fragment {
                 dayName = "Середа";
                 break;
             case 5:
-                dayName = "Четверг";
+                dayName = "Четвер";
                 break;
             case 6:
                 dayName = "П'ятниця";
@@ -105,12 +108,11 @@ public class MainFragment extends Fragment {
                 break;
         }
         return dayName;
-
     }
 
     int getCurrentTime(){
         Calendar calendar= Calendar.getInstance();
-        return calendar.get(Calendar.HOUR) + 2;
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
 
     int getCurrentDay(){
