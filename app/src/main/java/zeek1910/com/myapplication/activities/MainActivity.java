@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
         //navHostFragment.getNavController().navigate(R.id.favoritesFragment);
 
-        //AppSettings appSettings = new AppSettings(this);
-        //appSettings.setDefaultOwner("Пявка Євгеній Валентинович");
+        AppSettings appSettings = new AppSettings(this);
+        appSettings.setDefaultOwner("Пявка Євгеній Валентинович");
 
         isLowerWeek();
     }
