@@ -51,7 +51,7 @@ public class MainFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-        //adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
         panel = view.findViewById(R.id.upPanel);
 
