@@ -51,6 +51,7 @@ public class MainFragment extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        //adapter.notifyDataSetChanged();
 
         panel = view.findViewById(R.id.upPanel);
 
@@ -67,9 +68,8 @@ public class MainFragment extends Fragment {
             public void run() {
                 int currentDay = getCurrentDay();
                 int currentTime = getCurrentTime();
-                //Log.d("devcpp","currentTime->"+currentTime);
                 if (currentTime >= 16){
-                    if (++currentDay>6){
+                    if (++currentDay>5){
                         currentDay = 2;
                     }
                 }
@@ -77,7 +77,7 @@ public class MainFragment extends Fragment {
                 data = database.tableDao().getSheduleByLecturerByDay(defaultOwner,getDayNameByNumber(currentDay));
                 //Log.d("devcpp",""+data.size());
                 adapter = new TimeTableAdapter(data);
-                adapter.notifyDataSetChanged();
+                //adapter.notifyDataSetChanged();
             }
         }).start();
     }
